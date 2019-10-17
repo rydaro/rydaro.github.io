@@ -2,7 +2,5 @@ name: "Ryan Ross"
 navbar:
   title: "Ryan Ross"
   left:
-    - text: "About"
-      href: about.html
     - text: "Propensity Tutorial"
-      href: index.Rmd
+      href: index.html
