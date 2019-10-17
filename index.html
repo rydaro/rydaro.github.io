@@ -22,7 +22,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -184,30 +183,7 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="contact.html">
-    <span class="fa fa-envelope fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="http://github.com/zabore">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://twitter.com/zabormetrics">
-    <span class="fa fa-twitter fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://www.linkedin.com/in/emily-zabor-59b902b7/">
-    <span class="fa fa-linkedin fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -420,8 +396,8 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          2363     471
-## Matched      1418     455
-## Unmatched     945      16
+## Matched      1416     455
+## Unmatched     947      16
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>#save matched dataset
 matched_oral &lt;- match.data(matched)</code></pre>
@@ -667,7 +643,7 @@ exp_out(mod_adj)</code></pre>
 
 exp_out(mod_match)</code></pre>
 <pre><code>##             OR Lower Upper
-## treatment 0.89  0.53   1.5</code></pre>
+## treatment 0.79  0.46  1.34</code></pre>
 <pre class="r"><code>library(mgcv)
 mod_prop &lt;-gam(er60~treatment+s(pr_score,k=4,m=3),data=oral60,family=binomial(link=&#39;logit&#39;))
 
@@ -730,8 +706,8 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          1782     380
-## Matched      1090     365
-## Unmatched     692      15
+## Matched      1091     366
+## Unmatched     691      14
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>matched_ae &lt;- match.data(matched)
 
@@ -739,7 +715,7 @@ matchedmodreg &lt;-glm(ercount180~treatment,data=matched_ae,family=quasipoisson(
 
 exp_out(matchedmodreg)</code></pre>
 <pre><code>##             OR Lower Upper
-## treatment 0.98  0.58  1.65</code></pre>
+## treatment 0.98  0.64  1.51</code></pre>
 <pre class="r"><code>propae &lt;-glm(treatment~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro,data=oral180,family=binomial(link=&#39;logit&#39;))
 
