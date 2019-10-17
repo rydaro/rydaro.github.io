@@ -5,4 +5,4 @@ navbar:
     - text: "About"
       href: about.html
     - text: "Propensity Tutorial"
-      href: index.html
+      href: index.Rmd
