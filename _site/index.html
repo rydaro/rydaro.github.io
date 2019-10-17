@@ -178,9 +178,6 @@ $(document).ready(function () {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="about.html">About</a>
-</li>
-<li>
   <a href="index.html">Propensity Tutorial</a>
 </li>
       </ul>
@@ -398,8 +395,8 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          2363     471
-## Matched      1414     455
-## Unmatched     949      16
+## Matched      1422     455
+## Unmatched     941      16
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>#save matched dataset
 matched_oral &lt;- match.data(matched)</code></pre>
@@ -645,7 +642,7 @@ exp_out(mod_adj)</code></pre>
 
 exp_out(mod_match)</code></pre>
 <pre><code>##             OR Lower Upper
-## treatment 0.91  0.54  1.53</code></pre>
+## treatment 0.86  0.51  1.45</code></pre>
 <pre class="r"><code>library(mgcv)
 mod_prop &lt;-gam(er60~treatment+s(pr_score,k=4,m=3),data=oral60,family=binomial(link=&#39;logit&#39;))
 
@@ -708,16 +705,16 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          1782     380
-## Matched      1103     366
-## Unmatched     679      14
+## Matched      1097     365
+## Unmatched     685      15
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>matched_ae &lt;- match.data(matched)
 
 matchedmodreg &lt;-glm(ercount180~treatment,data=matched_ae,family=quasipoisson(link=&quot;log&quot;),weights = weights)
 
 exp_out(matchedmodreg)</code></pre>
-<pre><code>##           OR Lower Upper
-## treatment  1   0.6  1.68</code></pre>
+<pre><code>##             OR Lower Upper
+## treatment 0.95  0.61  1.47</code></pre>
 <pre class="r"><code>propae &lt;-glm(treatment~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro,data=oral180,family=binomial(link=&#39;logit&#39;))
 
