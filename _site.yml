@@ -3,6 +3,6 @@ navbar:
   title: "Ryan Ross"
   left:
     - text: "Home"
-      href: index.html
-    - text: "About"
       href: about.html
+    - text: "Propensity Tutorial"
+      href: index.html
