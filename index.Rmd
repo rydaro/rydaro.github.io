@@ -224,10 +224,15 @@ g<- ggplot(oral60,aes(x = pr_score, color=Treatment,fill=Treatment)) +
                          legend.title=element_blank(),
                          text = element_text(size=16),
                          axis.title.x =element_text(hjust = 0.2,size=16))
-
+```
+```{r plot_1, eval=FALSE}
 ggpar(g,palette="nejm")
 
 ```
+
+<center>
+![Figure 2: Distributions of Propensity scores by Treatment Group](./PS_plot1.png)
+</center>
 
 ```{r cbps, echo=TRUE}
 library(CBPS)
@@ -428,10 +433,15 @@ fp <- ggplot(data =plot_data,aes(x=label, y=bias,color=group,shape=group)) +
                          legend.title=element_blank(),
                          text = element_text(size=16),
                          axis.title.x =element_text(hjust = 0.2,size=16)) #additional aesthetic options
-
+```
+```{r plot3, eval=FALSE}
 ggpar(fp,palette="nejm")
 
 ```
+
+<center>
+![Figure 3: Distributions of Propensity scores by Treatment Group](./PS_plot2.png)
+</center>
 
 ##Treatment Effect Estimation
 
@@ -1216,10 +1226,14 @@ geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE,size=2)+ ge
                          panel.grid.minor=element_blank(),
                          legend.title=element_blank(),
                          text = element_text(size=16))
-
+```
+```{r plot4, eval=FALSE}
 ggpar(p,palette="nejm")
 ```
 
+<center>
+![Figure 4: Opioid Presribing Trends by Treatment Group](./PS_plot4.png)
+</center>
 
 We wish to model the trend and to test if there is any difference in mean opioid prescribing at any time point between treatment groups. We can model the quantity of opioids prescribed in MME $Y_{ij}$ at the $j^{th}$ 30 day period for each individual $i$ as:
 

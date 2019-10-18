@@ -3,8 +3,19 @@ output_dir: "."
 navbar:
   title: "Ryan Ross"
   left:
+    - text: "About"
+      href: about.html
     - text: "Propensity Tutorial"
       href: index.html
+  right:
+    - icon: fa-envelope fa-lg
+      href: 
+    - icon: fa-github fa-lg
+      href: http://github.com/rydaro
+    - icon: fa-twitter fa-lg
+      href: https://twitter.com/ryandaross
+    - icon: fa-linkedin fa-lg
+      href: https://www.linkedin.com/in/ryan-ross-037370a4/
 output:
   html_document:
     theme: paper

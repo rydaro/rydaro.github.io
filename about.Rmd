@@ -1,0 +1,24 @@
+---
+title: "About"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css">
+
+<img src="/Users/ryanross/Documents/GitHub/rydaro.github.io/IMG_1612.png" style="width:25%; border:10px solid; margin-right: 20px" align="left">
+
+
+
+
+
+Ryan is currently a PhD student at the University of Michigan biostatistics department, where he just recently completed a masters. Prior to graduate school, he worked as a biostatistician for the University of Utah medical school and as a product specialist and data analyst for Qualtrics llc. Ryan has worked significantly with large medical claims datasets such as Medicare Part D and OptumInsight through various projects, ranging from opioid prescribing disparities to characterization of prostate cancer treatments. He plans on continuing into a career that focuses on population health research and related interventions.
+
+See my LinkedIn: https://www.linkedin.com/in/ryan-ross-037370a4/
+
+

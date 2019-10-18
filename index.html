@@ -22,6 +22,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -179,11 +180,37 @@ $(document).ready(function () {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="about.html">About</a>
+</li>
+<li>
   <a href="index.html">Propensity Tutorial</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a>
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/rydaro">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/ryandaross">
+    <span class="fa fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/ryan-ross-037370a4/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -371,10 +398,11 @@ oral60$pr_score &lt;-predict(prop_model,type=&quot;response&quot;)
                          panel.grid.minor=element_blank(),
                          legend.title=element_blank(),
                          text = element_text(size=16),
-                         axis.title.x =element_text(hjust = 0.2,size=16))
-
-ggpar(g,palette=&quot;nejm&quot;)</code></pre>
-<p><img src="index_files/figure-html/ps%20plot-1.png" width="768" /></p>
+                         axis.title.x =element_text(hjust = 0.2,size=16))</code></pre>
+<pre class="r"><code>ggpar(g,palette=&quot;nejm&quot;)</code></pre>
+<center>
+<img src="PS_plot1.png" alt="Figure 2: Distributions of Propensity scores by Treatment Group" />
+</center>
 <pre class="r"><code>library(CBPS)
 #calculate weights using CBPS package and function
 cbpsoral &lt;-CBPS(treatment~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
@@ -396,8 +424,8 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          2363     471
-## Matched      1416     455
-## Unmatched     947      16
+## Matched      1422     455
+## Unmatched     941      16
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>#save matched dataset
 matched_oral &lt;- match.data(matched)</code></pre>
@@ -569,10 +597,11 @@ fp &lt;- ggplot(data =plot_data,aes(x=label, y=bias,color=group,shape=group)) +
                          panel.grid.minor=element_blank(),
                          legend.title=element_blank(),
                          text = element_text(size=16),
-                         axis.title.x =element_text(hjust = 0.2,size=16)) #additional aesthetic options
-
-ggpar(fp,palette=&quot;nejm&quot;)</code></pre>
-<p><img src="index_files/figure-html/balance%20plot-1.png" width="768" /></p>
+                         axis.title.x =element_text(hjust = 0.2,size=16)) #additional aesthetic options</code></pre>
+<pre class="r"><code>ggpar(fp,palette=&quot;nejm&quot;)</code></pre>
+<center>
+<img src="PS_plot2.png" alt="Figure 3: Distributions of Propensity scores by Treatment Group" />
+</center>
 </div>
 </div>
 <div id="treatment-effect-estimation" class="section level2">
@@ -643,7 +672,7 @@ exp_out(mod_adj)</code></pre>
 
 exp_out(mod_match)</code></pre>
 <pre><code>##             OR Lower Upper
-## treatment 0.79  0.46  1.34</code></pre>
+## treatment 0.86  0.51  1.45</code></pre>
 <pre class="r"><code>library(mgcv)
 mod_prop &lt;-gam(er60~treatment+s(pr_score,k=4,m=3),data=oral60,family=binomial(link=&#39;logit&#39;))
 
@@ -706,16 +735,16 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          1782     380
-## Matched      1091     366
-## Unmatched     691      14
+## Matched      1099     365
+## Unmatched     683      15
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>matched_ae &lt;- match.data(matched)
 
 matchedmodreg &lt;-glm(ercount180~treatment,data=matched_ae,family=quasipoisson(link=&quot;log&quot;),weights = weights)
 
 exp_out(matchedmodreg)</code></pre>
-<pre><code>##             OR Lower Upper
-## treatment 0.98  0.64  1.51</code></pre>
+<pre><code>##            OR Lower Upper
+## treatment 0.9  0.58   1.4</code></pre>
 <pre class="r"><code>propae &lt;-glm(treatment~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro,data=oral180,family=binomial(link=&#39;logit&#39;))
 
@@ -802,10 +831,11 @@ geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE,size=2)+ ge
                            axis.ticks.y=element_blank(),
                          panel.grid.minor=element_blank(),
                          legend.title=element_blank(),
-                         text = element_text(size=16))
-
-ggpar(p,palette=&quot;nejm&quot;)</code></pre>
-<p><img src="index_files/figure-html/opioid_plot-1.png" width="768" /></p>
+                         text = element_text(size=16))</code></pre>
+<pre class="r"><code>ggpar(p,palette=&quot;nejm&quot;)</code></pre>
+<center>
+<img src="PS_plot4.png" alt="Figure 4: Opioid Presribing Trends by Treatment Group" />
+</center>
 <p>We wish to model the trend and to test if there is any difference in mean opioid prescribing at any time point between treatment groups. We can model the quantity of opioids prescribed in MME <span class="math inline">\(Y_{ij}\)</span> at the <span class="math inline">\(j^{th}\)</span> 30 day period for each individual <span class="math inline">\(i\)</span> as:</p>
 <p><span class="math display">\[
 Y_{ij} = \beta_{0} + b_{0i} + \beta_{1}T_{i} + S(t_{ij}) +S(t_{ij})T_{i} +\epsilon_{ij}
