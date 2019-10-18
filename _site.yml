@@ -8,8 +8,6 @@ navbar:
     - text: "Propensity Tutorial"
       href: index.html
   right:
-    - icon: fa-envelope fa-lg
-      href: 
     - icon: fa-github fa-lg
       href: http://github.com/rydaro
     - icon: fa-twitter fa-lg

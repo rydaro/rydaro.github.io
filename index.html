@@ -188,12 +188,6 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a>
-    <span class="fa fa-envelope fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="http://github.com/rydaro">
     <span class="fa fa-github fa-lg"></span>
      
@@ -424,8 +418,8 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          2363     471
-## Matched      1422     455
-## Unmatched     941      16
+## Matched      1412     455
+## Unmatched     951      16
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>#save matched dataset
 matched_oral &lt;- match.data(matched)</code></pre>
@@ -672,7 +666,7 @@ exp_out(mod_adj)</code></pre>
 
 exp_out(mod_match)</code></pre>
 <pre><code>##             OR Lower Upper
-## treatment 0.86  0.51  1.45</code></pre>
+## treatment 0.88  0.52  1.48</code></pre>
 <pre class="r"><code>library(mgcv)
 mod_prop &lt;-gam(er60~treatment+s(pr_score,k=4,m=3),data=oral60,family=binomial(link=&#39;logit&#39;))
 
@@ -735,16 +729,16 @@ matched_sum&lt;-summary(matched)
 matched_sum$nn</code></pre>
 <pre><code>##           Control Treated
 ## All          1782     380
-## Matched      1099     365
-## Unmatched     683      15
+## Matched      1099     366
+## Unmatched     683      14
 ## Discarded       0       0</code></pre>
 <pre class="r"><code>matched_ae &lt;- match.data(matched)
 
 matchedmodreg &lt;-glm(ercount180~treatment,data=matched_ae,family=quasipoisson(link=&quot;log&quot;),weights = weights)
 
 exp_out(matchedmodreg)</code></pre>
-<pre><code>##            OR Lower Upper
-## treatment 0.9  0.58   1.4</code></pre>
+<pre><code>##             OR Lower Upper
+## treatment 1.01   0.6  1.68</code></pre>
 <pre class="r"><code>propae &lt;-glm(treatment~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro,data=oral180,family=binomial(link=&#39;logit&#39;))
 
