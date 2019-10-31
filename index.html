@@ -856,6 +856,11 @@ geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE,size=0.8,al
                          panel.grid.minor=element_blank(),
                          text = element_text(size=16))</code></pre>
 <pre class="r"><code>ggpar(p,palette=&quot;nejm&quot;)</code></pre>
+<pre class="r"><code>png(filename=&quot;./PS_plot4.png&quot;,height = 520,width = 640)
+ggpar(p,palette=&quot;nejm&quot;)
+dev.off()</code></pre>
+<pre><code>## quartz_off_screen 
+##                 2</code></pre>
 <center>
 <img src="PS_plot4.png" alt="Figure: Opioid Presribing Trends by Treatment Group" />
 </center>

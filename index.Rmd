@@ -1279,7 +1279,7 @@ geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE,size=0.8,al
 ggpar(p,palette="nejm")
 ```
 
-```{r plot4save, message=FALSE, warning=FALSE, include=FALSE}
+```{r plot4save, echo=TRUE, message=FALSE, warning=FALSE}
 png(filename="./PS_plot4.png",height = 520,width = 640)
 ggpar(p,palette="nejm")
 dev.off()
