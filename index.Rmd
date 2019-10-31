@@ -1,5 +1,5 @@
 ---
-title: A Tutorial on Applying Propensity Score Methods Using a Large Medical Claims Database
+title: Step by Step Propensity Score Tutorial (with R Code)
 output:
   html_document:
     fig_width: 8
@@ -71,7 +71,7 @@ $$
 where $\mu_{i} = E[Y_{i}|T_i]$ and $\beta_1$ is the parameter of interest for treatment comparison. In the simple linear regression case where $g()$ is the identity function, $\beta_1 = E[Y_i|T_i=1] - E[Y_i|T_i=0]$. This is the standard method for data from a randomized trial. With observational studies, however, the mechanism behind treatment assignment is not random, and thus the treatment populations may differ greatly. Therefore $E[Y(1)|T = 1] \neq E [Y(1)]$ and $E[Y(0)|T = 0] \neq E [Y(0)]$ in general.14 As a result, the estimate for ATE will be biased due to confounding. Traditionally, confounders were adjusted for directly in the outcome model to obtain an estimate of ATE. However useful, estimates from this approach may be unreliable where there are many covariates with potential non-linearity and interactions, the groups of comparison are greatly imbalanced on one or several confounders, or the confounders are highly correlated. With the large number of variables seen in health care databases, this approach is often not feasible due to the large dimension of the adjusted model and the possibility of model misspecification. The notion of the propensity score, a unidimensional construct, offers alternative analytical approaches that are more suitable for this type of data. Using the propensity score in analysis involves several steps that have to be exercised with caution, as outlined in Figure 1. Below, we outline each step and demonstrate the process.
 
 <center>
-![Figure 1: Flow diagram of stages of propensity score analysis. Gold pathway indicates steps done in iteration until acceptable balance is achieved.](./PS_Diagram.png)
+![Figure: Flow diagram of stages of propensity score analysis. Gold pathway indicates steps done in iteration until acceptable balance is achieved.](./PS_Diagram.png)
 
 
 </center>
@@ -194,7 +194,9 @@ We can construct a model for treatment assignment, $T_{i}=0$ if immunotherapy wa
 
 ```{r propensity_construction, echo=TRUE, warning=FALSE}
 
-#create subsets for treating oral therapy and docetaxel separately
+library(tidyverse)
+
+#create subsets for treating oral therapy and immunotherapy separately
 oral<-firstline_single[firstline_single$pae<99,]
 oral$treatment<-oral$pae
 
@@ -209,12 +211,15 @@ prop_model <-glm(treatment~agecat+racecat+educat+housecat+Division+Product+met+A
 
 #save predicted scores to dataset
 oral60$pr_score <-predict(prop_model,type="response")
-#oral60$pr_score <-prop_model$predict
+
 
 ```
 
 
 ```{r ps plot}
+library(ggplot2)
+library(ggpubr)
+#this plots the distribution of our estimated propensity scores
 g<- ggplot(oral60,aes(x = pr_score, color=Treatment,fill=Treatment)) +
   geom_density(alpha=.47) + 
   xlab("Estimated Probability of Recieving Oral Therapy") +
@@ -231,7 +236,7 @@ ggpar(g,palette="nejm")
 ```
 
 <center>
-![Figure 2: Distributions of Propensity scores by Treatment Group](./PS_plot1.png)
+![Figure: Distributions of Propensity scores by Treatment Group](./PS_plot1.png)
 </center>
 
 ```{r cbps, echo=TRUE}
@@ -279,13 +284,13 @@ oral60$IPTW <-oral60$treatment/oral60$pr_score_trim + (1-oral60$treatment)/(1-or
 Each method can be assessed for successful reduction in standardized difference for the analysis sample. Figure 3 shows a plot of the standardized difference of the covariates between the immunotherapy group, and oral therapy group for CBPS, IPTW and propensity matching methods. We can see that the inverse weighted data and the matched sample reduced the standardized difference for many covariates, even if perfect balance was not achieved. Unsurprisingly, the CBPS weights have very low/no bias, as the weights are constructed to achieve this goal of exact matching. With balance among the covariates achieved, we can now begin treatment effect estimation.
 ```{r balance plot, echo=TRUE, message=FALSE, warning=FALSE}
 ###################figure
-#for forest plot to check for bias
+#for forest plot to check the standardized differences
 #create dummy variables for the many categorical variables
 model_mat <-model.matrix(~treatment +agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro -1,oral)
 
 model_mat <-data.frame(model_mat)
-#model_mat$treatment <-as.factor(model_mat$treatment)
+
 
 #calculate means and standard deviations of each variable by group
 fullsamp_means <-model_mat %>%
@@ -301,7 +306,7 @@ fullsamp_std$pooled <- sqrt(((fullsamp_std[,1])^2 + (fullsamp_std[,2])^2)/2)
 
 fullsamp<-data.frame(t(fullsamp_means),fullsamp_std$pooled)
 
-#calculate the standardized bias of the observed sample
+#calculate the standardized difference of the observed sample
 colnames(fullsamp)<-c("sip_mean","oral_mean","sd")
 fullsamp$bias <-(as.numeric(as.character(fullsamp$sip_mean))-as.numeric(as.character(fullsamp$oral_mean)))/as.numeric(as.character(fullsamp$sd))
 fullsamp$group <-rep("Observed",nrow(fullsamp))
@@ -314,9 +319,6 @@ model_mat <-model.matrix(~treatment +agecat+racecat+educat+housecat+Division+Pro
   hypertension+CHF+osteoporosis+arrythmia+uro+weights -1,matched_oral)
 
 model_mat <-data.frame(model_mat)
-#model_mat$treatment <-as.factor(model_mat$treatment)
-
-
 
 matched_means <-model_mat %>%
   group_by(treatment) %>%
@@ -330,7 +332,9 @@ matched_std <-data.frame(t(matched_var))
 matched_std$pooled <- sqrt(((matched_std[,1])^2 + (matched_std[,2])^2)/2)
 
 matched<-data.frame(t(matched_means),matched_std$pooled)
-matched<-matched[1:33,]
+
+#remove the last row of our dataframe which contains the weights
+matched<-matched[-nrow(matched),]
 
 colnames(matched)<-c("sip_mean","oral_mean","sd")
 matched$bias <-(as.numeric(as.character(matched$sip_mean))-as.numeric(as.character(matched$oral_mean)))/as.numeric(as.character(matched$sd))
@@ -361,7 +365,9 @@ weighted_std <-data.frame(t(weighted_var))
 weighted_std$pooled <- sqrt(((weighted_std[,1])^2 + (weighted_std[,2])^2)/2)
 
 weighted<-data.frame(t(weighted_means),weighted_std$pooled)
-weighted<-weighted[1:33,]
+
+#remove the last row of the dataframe 
+weighted<-weighted[-nrow(weighted),]
 
 colnames(weighted)<-c("sip_mean","oral_mean","sd")
 weighted$bias <-(as.numeric(as.character(weighted$sip_mean))-as.numeric(as.character(weighted$oral_mean)))/as.numeric(as.character(weighted$sd))
@@ -392,7 +398,9 @@ cbps_std <-data.frame(t(cbps_var))
 cbps_std$pooled <- sqrt(((cbps_std[,1])^2 + (cbps_std[,2])^2)/2)
 
 balanced<-data.frame(t(cbps_means),cbps_std$pooled)
-balanced<-balanced[1:33,]
+
+#remove last row containing weights
+balanced<-balanced[-nrow(balanced),]
 
 colnames(balanced)<-c("sip_mean","oral_mean","sd")
 balanced$bias <-(as.numeric(as.character(balanced$sip_mean))-
@@ -404,10 +412,12 @@ balanced$label <-rownames(balanced)
 
 #construct plot data frame from all calculations
 plot_data <-rbind(fullsamp,matched,weighted,balanced)
-#plot_data$label <-rownames(plot_data)
 
-#change label names for presentation
+
+#change label names for presentation purposes
 plot_data$label <-c("Sip","Age: <55","Age: 55-64","Age: 65-74","Age: >74","Race: Asian","Race: Black","Race: Hispanic", "Race: Unknown","Educaton: Some College","Education: Unknown","Income: 50-99K", "Income: >99k", "Income: Unknown","Region: East South Central","Region: Middle Atlantic", "Region: Mountain","Region: New England","Region: Pacific","Region: South Atlantic","Region: Unknown","Region: West North Central","Region: West South Central","Product: Other","Product: PPO","Metastatic: Yes","ASO: Yes","Diabetes: Yes","Hypertension: Yes","CHF: Yes","Osteoporosis: Yes","Arrhythmia: Yes","Provider: Urologist")
+
+
 #remove row where bias is infinite because there are no subjects in control group
 '%!in%' <- function(x,y)!('%in%'(x,y))
 plot_data <-plot_data %>%
@@ -440,7 +450,7 @@ ggpar(fp,palette="nejm")
 ```
 
 <center>
-![Figure 3: Distributions of Propensity scores by Treatment Group](./PS_plot2.png)
+![Figure: Distributions of Propensity scores by Treatment Group](./PS_plot2.png)
 </center>
 
 ##Treatment Effect Estimation
@@ -500,12 +510,13 @@ Now we compare these results to our propensity methods. We can run the marginal 
 
 ```{r ae_er60_match, echo=TRUE}
 
+#regular glm, but incorporating the weights from MATCHIT
 mod_match <-glm(er60~treatment,data=matched_oral,family=binomial(link='logit'),weights = weights)
 
 exp_out(mod_match)
 ```
 
-```{r ae_er60_prop, echo=TRUE}
+```{r ae_er60_prop, eval=FALSE, include=FALSE}
 library(mgcv)
 mod_prop <-gam(er60~treatment+s(pr_score,k=4,m=3),data=oral60,family=binomial(link='logit'))
 
@@ -528,6 +539,7 @@ Finally, we can fit the outcome model on the full dataset, now weighting each ob
 
 library(survey)
 
+#create survey object using IPTW weights
 design.ps <- svydesign(ids=~1, weights=~IPTW, data=oral60)
 
 mod_iptw<-svyglm(er60~treatment,design=design.ps,family=binomial(link='logit'))
@@ -621,15 +633,17 @@ oral180<-oral %>%
   filter(enrolltime >=180)
 
 #use quasipoisson function to account for overdispersion
-mod_unad <-glm(ercount180~treatment,data=oral180,family=quasipoisson(link="log"))
+mod_unad <-glm(ercount180~treatment,data=oral180,family=poisson(link="log"))
 
 exp_out(mod_unad)
 ```
 
 ```{r ae_er180_no, echo=TRUE}
-modfullgroup2 <-glm(ercount180~treatment+agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+hypertension+CHF+osteoporosis+arrythmia+uro,data=oral180,family=quasipoisson(link="log"))
+modfullgroup2 <-glm(ercount180~treatment+agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+hypertension+CHF+osteoporosis+arrythmia+uro,data=oral180,family=poisson(link="log"))
 
 exp_out(modfullgroup2)
+
+#similar matching process for this group, but slighlty different matching numbers
 
 matched <- matchit((1-treatment)~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro,data =oral180, method = "nearest",caliper=.2,ratio=4)
@@ -768,15 +782,48 @@ where $\lambda_{0}(t)$ is the baseline hazard function for immunotherapy and $\l
 
 ```{r time_ae, echo=TRUE}
 library(survival)
+library(survminer)
 #create a factor variable of the treatment
-oral$treatment_fac<-factor(oral$treatment,labels =c("Sip","AE"))
+oral$treat_f<-factor(oral$treatment,labels =c("Immuno","Oral"))
 
-mod_unad <-coxph(Surv(enrolltime) ~ treatment_fac, data = oral)
+mod_unad <-survfit(Surv(enrolltime) ~ treat_f, data = oral)
 
-out <-exp(mod_unad$coefficients[1] +qnorm(c(0.5,0.025,0.975)) *(sqrt(mod_unad$var[1,1]) ))
-names(out) <-c("Estimate","Lower","Upper")
-round(out,2)
+
+#view Kaplan-Meier Estimates
+mod_unad
+
+#can also try fitting cox model to look at hazard ratios
+#mod_unad_cox <-coxph(Surv(enrolltime) ~ treatment_fac, data = oral)
+
+#estimates from cox model
+#out <-exp(mod_unad$coefficients[1] +qnorm(c(0.5,0.025,0.975)) *(sqrt(mod_unad$var[1,1]) ))
+#names(out) <-c("Estimate","Lower","Upper")
+#round(out,2)
 ```
+```{r survplot, echo=T, message=FALSE, warning=FALSE, results='hide'}
+#We can also make a Kaplan-Meier Plot of all the enrollment data
+#saved as a file, then reloaded into the markdwon
+png(filename="./PS_survplot.png",height = 520,width = 640)
+ggsurvplot(
+    fit = mod_unad, 
+    xlab = "Days Since Start of First Focus Drug", 
+    ylab = "Overall survival probability",
+    surv.median.line = "hv",
+    risk.table = "absolute",
+    conf.int = FALSE,
+     palette = "nejm",
+    xlim=c(0,1100),
+    break.x.by=365,
+    surv.plot.height=.6,
+    legend.title="Treatment",
+    legend.labs=c("Immunotherapy","Oral Therapy"))
+
+dev.off()
+
+```
+<center>
+![Figure: Kaplan_Meier Plot of Enrollment Time by Drug Treatment Group](./PS_survplot.png)
+</center>
 Here, the matched estimate 1.15 (1.04,1.28) shows that patients who receive an oral therapy first-line were more likely to stop treatment at any given time than patients who received immunotherapy. In other words, patients who received an oral therapy first-line had a shorter total duration of time on all treatments than patients who received immunotherapy as their first-line therapy. Using the same method, patients who received chemotherapy as first-line had a hazard ratio of 1.36 (1.21,1.54) again, having a shorter duration of time on treatment than those patients who started with immunotherapy. In Table 3, we can see the estimates for the hazard ratios of ending enrollment as well, with 1.35 (1.28,1.42) comparing oral therapy to immunotherapy, and 1.31 (1.24,1.39) comparing chemotherapy to immunotherapy using the logistic IPTW method.
 
 
@@ -1219,40 +1266,51 @@ plot_all$mean <-plot_all$monthtotal
 
 #plot_data <-plot_data[plot_data$Brand!="DOC",]
 
-p <-ggplot(plot_data,aes(x=t,y=mean,group=Treatment,color=Treatment,fill=Treatment,linetype=Treatment,weight=n,shape=Treatment))   + 
-geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE,size=2)+ geom_point(size=4.5) + labs(color='Treatment',x='Days Since Start of First Focus Drug',y='Mean Opioids Prescribed (MME)') + 
-  scale_x_continuous(breaks = seq(0, 180, by = 30)) +theme_minimal()+ theme(#plot.title = element_text(hjust = 0.9,size=16),
+p <-ggplot(plot_data,aes(x=t,y=mean,group=Treatment,color=Treatment,fill=Treatment,linetype=Treatment,weight=n,shape=Treatment,alpha=n))   + 
+geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE,size=0.8,alpha=0.4)+ geom_point(size=4.5) + labs(color='Treatment',x='Days Since Start of First Focus Drug',y='Mean Opioids Prescribed (MME)') + 
+  scale_x_continuous(breaks = seq(0, 180, by = 30)) +theme_minimal()+
+  scale_alpha_continuous(range = c(0.5, 1)) +
+  theme(#plot.title = element_text(hjust = 0.9,size=16),
                            axis.ticks.y=element_blank(),
                          panel.grid.minor=element_blank(),
-                         legend.title=element_blank(),
                          text = element_text(size=16))
 ```
 ```{r plot4, eval=FALSE}
 ggpar(p,palette="nejm")
 ```
 
+```{r plot4save, warning=FALSE, include=FALSE}
+png(filename="./PS_plot4.png",height = 520,width = 640)
+ggpar(p,palette="nejm")
+dev.off()
+```
+
 <center>
-![Figure 4: Opioid Presribing Trends by Treatment Group](./PS_plot4.png)
+![Figure: Opioid Presribing Trends by Treatment Group](./PS_plot4.png)
 </center>
 
-We wish to model the trend and to test if there is any difference in mean opioid prescribing at any time point between treatment groups. We can model the quantity of opioids prescribed in MME $Y_{ij}$ at the $j^{th}$ 30 day period for each individual $i$ as:
+We wish to model the trend and to test if there is any difference in mean opioid prescribing at any time point between treatment groups. We can model the quantity of opioids prescribed in MME $Y_{ij}$ at the 30 day period $t_j$ for each individual $i$ as:
 
 $$
-Y_{ij} = \beta_{0} + b_{0i} + \beta_{1}T_{i} + S(t_{ij}) +S(t_{ij})T_{i} +\epsilon_{ij}
+Y_{ij} = \beta_{0} + b_{0i} + \beta_{1}T_{i} + S(t_{j}) +S(t_{j})T_{i} +\epsilon_{ij}
 $$
 
 where $j=1,..,n_{i}$, $n_{i} \in \{1,2,3,4,5,6,7\}$, $b_{0} \sim N(0,\tau^{2})$ and $\epsilon_{i} \sim MVN_{n_{i}}(0,\sigma^{2}I_{n_{i}})$. $S(t_{ij})$ is specified as a penalized regression spline with 3 degrees of freedom, allowing more flexible smooths for modeling the prescribing trend over time. We set the smooth in an interaction term to allow for different smooth trends for the immunotherapy and oral therapy treatment groups. Thus, the main parameter of interest tells us the difference in the mean opioid prescribing over time between the two groups. We can fit each of the methods in this outcome, adding covariates and smooths directly in the model, and fitting the model on a matched dataset. We use the R package *mgcv*.$^{[58]}$ Maindonald$^{[59]}$ also provides more detail on smooths when using GAM models. An important note when using IPTW and CBPS is that we are only weighting on the initial treatment, so at other time points the weights may bias the results. Also, we truncated the time to six months because many patients will only respond to or tolerate treatment for around six months before switching therapies to another focus treatment. Opiate use may parallel disease response to treatment in those who are started on opiates for their cancer. In other words, a patient’s opiate use may decrease when their cancer is improving on treatment and subsequently increase when the cancer has become resistant to treatment. Pain management beyond six months from the initial treatment is unlikely related to that treatment as many patients have changed regimens or stopped treatment altogether. Any inferences using the full time period will be heavily biased by changing therapy or require advanced methods to handle switching treatments, such as marginal structure models.60 Table 3 shows the estimated difference in mean opioid usage between groups at selected time points. 
 
 ```{r opioid_ae, echo=TRUE, eval=FALSE}
 
+#these models take a long time to run, so output is saved 
+#then reposted for illustrations
 
-
-
+#opioid data is stored in firstline_opioid dataset
+#create ae to only compare oral therapy and immunotherapy
 ae<-firstline_opioid[firstline_opioid$pae<=1,]
 
 
 
 ae$treatment <-ae$pae
+
+#select variables needed from ae
 ae <-ae %>%
   dplyr::select(Patid,monthtotal,t,treatment,pae,agecat,racecat,educat,
               housecat,Division,
@@ -1260,19 +1318,23 @@ ae <-ae %>%
               hypertension,
               CHF,osteoporosis,arrythmia,
               uro)
+
+#replace missings 
 ae$monthtotal <-ifelse(is.na(ae$monthtotal),0,ae$monthtotal)
 
 ae$provfac<-factor(ae$pae,labels =c("Sip","AE"))
 ae$Patid <-as.factor(ae$Patid)
 ae$t <-as.integer(ae$t)
 
+#keep only the first 6 periods
 ae <-ae[ae$t<=6,]
 
-modfullgroup <-bam(monthtotal~provfac  +s(t,by=provfac,k=3)+
-                     s(Patid, bs="re",m=1),data=ae)
+modfullgroup <-bam(monthtotal~provfac  +s(t,by=provfac,k=3)+s(Patid, bs="re",m=1),data=ae)
+
+
 summary(modfullgroup)
 
-gam.check(modfullgroup)
+
   p <- plot_diff(modfullgroup, view="t", 
                  comp=list(provfac=c("AE", "Sip")),
                  cond=list(Condition=1),
@@ -1282,12 +1344,27 @@ gam.check(modfullgroup)
                  col=rainbow(6)[6], 
                  rm.ranef=TRUE) #plot=FALSE
   
-g<-plot_smooth(modfullgroup, view = "t",cond=list(provfac=c("Sip")),rm.ranef = TRUE, main="TEST",rug =FALSE)
-  
-  print(paste(p$est[c(1,51,99)],p$est[c(1,51,99)] - p$CI[c(1,51,99)],p$est[c(1,51,99)] + p$CI[c(1,51,99)])) 
-  
+  #optional plot of smoothed model difference over time 
+#plot_smooth(modfullgroup, view = "t",cond=list(provfac=c("Sip")),rm.ranef = TRUE, main="Model Dif",rug =FALSE)
+
+  #check which rows of plot data contain estimates at times of interest 
+p0 <-subset(p,t==0)
+p0
+
+#time we want may not be exeacly estimated, need something very close
+#row 51 is what I took 
+p3 <-subset(p,t>2.8 & t<3.2)
+p3
 
 
+p6 <-subset(p,t>5.8 & t<6.2)
+p6
+
+  #manual extraction of estimate and CI at desired time points
+  print(paste(p$est[c(1,51,100)],p$est[c(1,51,100)] - p$CI[c(1,51,100)],p$est[c(1,51,100)] + p$CI[c(1,51,100)])) 
+  
+
+#now with covariate adjustments
 
 modfullgroup2 <-bam(monthtotal~provfac +agecat+racecat+educat+
               housecat+Division+
@@ -1310,6 +1387,9 @@ summary(modfullgroup2)
 
   print(paste(p$est[c(1,51,99)],p$est[c(1,51,99)] - p$CI[c(1,51,99)],p$est[c(1,51,99)] + p$CI[c(1,51,99)]))  
   
+  
+  #match based on start of focus drug treatment 
+  
   ae_matching <-ae %>%
     group_by(Patid) %>%
     filter(row_number()==1)
@@ -1327,6 +1407,8 @@ matched_ae <- match.data(matched)
 
 matched_ids <-unique(matched_ae$Patid)
 
+
+#spline adjustment 
 m_ae <- ae %>%
   filter(Patid %in% matched_ids)
   
@@ -1345,7 +1427,7 @@ summary(matchedmodreg)
 
         print(paste(p$est[c(1,51,99)],p$est[c(1,51,99)] - p$CI[c(1,51,99)],p$est[c(1,51,99)] + p$CI[c(1,51,99)])) 
 
-
+#Now IPTW based on first drug
 propae <-glm(provfac~agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro,data=ae_matching,family=binomial(link='logit'))
 
