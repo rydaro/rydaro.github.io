@@ -247,7 +247,7 @@ return.CI_ps <-function(est,A,Y,X,PS,PS.formula,OR.formula,out_type="linear",ate
 
 ##Summary
 
-This is a tutorial for using propensity score methods for comparative effectiveness research. Example using medical claims data with R code provided at each step.
+This is a tutorial for using propensity score methods for comparative effectiveness and causal inference research. The example uses medical claims data with R code provided at each step.
 
 
 <center>
