@@ -1692,6 +1692,23 @@ p <- plot_diff(aecbps, view="t",
 
 The difference in MME prescribed to an average individual in the immunotherapy group vs. the oral therapy group at treatment start is -83 MME (CI -391, 224) in the unadjusted model. In other words, among patients prescribed opioids, the average individual in the immunotherapy group treatment is predicted to have 83 more MME’s of prescribed opioids than the average individual in the oral therapy group at treatment start; however, this difference is not significantly significant. This estimate changes 90 days post treatment start to -130 MME (CI -380, 121) demonstrating how the estimate varies across time. We did not detect any significant differences in opioid usage at any time point, for both the oral and immunotherapy comparison and the chemotherapy and immunotherapy comparison.
 
+###All Tabled Results
+
+<center>
+![Table 1](./Table_1.png)
+</center>
+
+<center>
+![Table 2](./Table_2.png)
+</center>
+
+<center>
+![Table 3a](./Table_3a.png)
+</center>
+
+<center>
+![Table 3b](./Table_3b.png)
+</center>
 
 ##Sensitivity Analysis
 We assessed robustness of ATE estimates by looking at the vibration of effects to many propensity score models based on observed set of confounders, and also calculating an E-value for unobserved confounding. For the binary outcome, we assessed the estimates to all possible propensity score models for three selected methods. Age was included as a baseline predictor in all models.  E-values were calculated for the model that included the full covariate set. The below figure shows the results of these analyses. The figure shows that we cannot detect a meaningful difference between the immunotherapy and oral therapy with either of these outcomes across an ensemble of propensity score models. However, we see with the chemotherapy comparisons that all estimates are significant across most choices of the propensity model. Yet, the E-values of 3.1, 3.05, and 3.17 indicate that results can be explained away by a modest unobserved confounder, so we should be cautious generalizing these results.
@@ -1725,6 +1742,7 @@ oral_iptw <-plot_vibration_cox(vib_oral_iptw,type='contour', alpha=.3)
 ##Conclusion
 
 In summary, the methods shown are very standard and routinely used tools for estimating causal effects from observed data in claims databases. It is important to note that these tools cannot perfectly answer causal questions, even with the most extensive data.  There are assumptions that need to be met for causal interpretation of these estimates and they are often not verifiable from observed data. Thus, careful consideration is required by the researchers as to what variables are confounding treatment and outcome, and what method and assumptions best fit the study. See paper for more discussion
+
 
 
 ##References
