@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Appendix of Functions</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Ryan Ross</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="index.html">Tutorial</a>
+</li>
+<li>
+  <a href="Appendix_Functions.html">Additional Code</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="http://github.com/rydaro">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/ryan-ross-037370a4/">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Appendix of Functions</h1>
+
+</div>
+
+
+<div id="exp_out" class="section level2">
+<h2>Exp_out</h2>
+<pre class="r"><code>#quickly expoentiate and compute CI&#39;s for glm object
+
+exp_out &lt;-function(model_object){
+  out&lt;-matrix(nrow=1,ncol=3)
+    out[1,1] &lt;-round(exp(summary(model_object)$coefficients[2,1]),2)   
+    out[1,2] &lt;-round(exp(summary(model_object)$coefficients[2,1] - 1.96*summary(model_object)$coefficients[2,2]),2)
+    out[1,3] &lt;-round(exp(summary(model_object)$coefficients[2,1] + 1.96*summary(model_object)$coefficients[2,2]),2)
+  colnames(out) &lt;-c(&#39;OR&#39;,&#39;Lower&#39;,&#39;Upper&#39;)
+  rownames(out)&lt;-names(model_object$coefficients[2])
+  print(out)
+}</code></pre>
+</div>
+<div id="g-computation-with-covariate-adjustment" class="section level2">
+<h2>G Computation with Covariate Adjustment</h2>
+<pre class="r"><code>#define inverse logit 
+expit &lt;-function(x){
+  exp(x)/(1+exp(x))
+}
+
+#out_type is linear, binary, or count
+#ate_type is risk_difference, odds_ratio, or rate_ratio
+
+U.DR = function(est,A,Y,X,OR.formula,out_type=&quot;linear&quot;,ate_type=&quot;difference&quot;){
+  data = data.frame(A,Y,X)
+  
+  Y_AX = model.matrix(data,object=OR.formula)
+  
+  par.Y_AX = est[1:ncol(Y_AX)]
+  ATE = est[ncol(Y_AX)+1]
+  
+  data1 = data.frame(A=1,Y,X)
+  data0 = data.frame(A=0,Y,X)
+  
+  #### setup predicted outcomes
+  
+  if (out_type==&quot;binary&quot;) {
+    
+    m1 = expit(model.matrix(data1,object=OR.formula)%*%par.Y_AX)
+    m0 = expit(model.matrix(data0,object=OR.formula)%*%par.Y_AX)
+    
+    L1 &lt;-mean(m1)
+    L0 &lt;-mean(m0)
+    
+    U.DR.Y_AX = c(Y-expit(Y_AX%*%par.Y_AX)) *(Y_AX)
+    
+  } else if (out_type==&quot;count&quot;) {
+    
+    m1 = exp(model.matrix(data1,object=OR.formula)%*%par.Y_AX)
+    m0 = exp(model.matrix(data0,object=OR.formula)%*%par.Y_AX)
+    
+    L1 &lt;-mean(m1)
+    L0 &lt;-mean(m0)
+    
+    U.DR.Y_AX = c(Y-exp(Y_AX%*%par.Y_AX)) *(Y_AX)
+    
+  } else if(out_type==&quot;linear&quot;){
+    m1 = model.matrix(data1,object=OR.formula)%*%par.Y_AX
+    m0 = model.matrix(data0,object=OR.formula)%*%par.Y_AX
+    
+    U.DR.Y_AX = c(Y-(Y_AX%*%par.Y_AX)) *(Y_AX)
+  }
+  
+  ###construct estimating equations
+  
+  if(ate_type==&quot;odds_ratio&quot;){
+    
+    U.DR.ATE = ATE -log((L1/(1-L1))/(L0/(1-L0)))
+  } else   if(ate_type==&quot;rate_ratio&quot;){
+    
+    U.DR.ATE = ATE -log(L1/L0)
+  } else   if(ate_type==&quot;difference&quot;){
+    
+    U.DR.ATE = ATE -(m1-m0)
+  }
+  
+  
+  return(cbind(OR=U.DR.Y_AX,ATE=U.DR.ATE))
+}
+
+G = function(est,A,Y,X,OR.formula,out_type,ate_type){
+  return(
+    apply(U.DR(est,A,Y,X,OR.formula,out_type,ate_type),2,sum)
+  )
+}
+
+
+return.CI &lt;-function(est,A,Y,X,OR.formula,out_type=&quot;linear&quot;,ate_type=&quot;difference&quot;){
+  
+  meat.half=U.DR(est,A,Y,X,OR.formula,out_type = out_type,ate_type = ate_type)
+  
+  bread&lt;-numDeriv::jacobian(func=G,x=est, A=A,Y=Y,X=X, OR.formula=OR.formula,out_type = out_type,ate_type = ate_type)
+  
+  IF = meat.half%*%t(solve(-bread))
+  ### ATE is the last element of est 
+  ATE.var = sum(IF[,ncol(IF)]^2)
+  
+  out&lt;-matrix(nrow=1,ncol=3)
+  if(ate_type==&quot;difference&quot;){
+    out[1,1] &lt;-round(ATE,2)
+    out[1,2] &lt;-round(ATE-qnorm(0.975)*sqrt(ATE.var),2)
+    out[1,3] &lt;-round(ATE+qnorm(0.975)*sqrt(ATE.var),2)
+  } else {
+    out[1,1] &lt;-round(exp(ATE),2)
+    out[1,2] &lt;-round(exp(ATE-qnorm(0.975)*sqrt(ATE.var)),2)
+    out[1,3] &lt;-round(exp(ATE+qnorm(0.975)*sqrt(ATE.var)),2)
+  }
+  colnames(out) &lt;-c(&#39;ATE estimate&#39;,&#39;CI Lower&#39;,&#39;CI Upper&#39;)
+  print(out)
+  
+}</code></pre>
+</div>
+<div id="g-computation-with-spline-propensity-score-adjustment" class="section level2">
+<h2>G Computation with Spline Propensity Score Adjustment</h2>
+<pre class="r"><code>#define inverse logit 
+expit &lt;-function(x){
+  exp(x)/(1+exp(x))
+}
+
+#out_type is linear, binary, or count
+#ate_type is risk_difference, odds_ratio, or rate_ratio
+
+U.DR_ps = function(est,A,Y,X,PS,PS.formula,OR.formula,out_type=&quot;linear&quot;,ate_type=&quot;difference&quot;){
+  data = data.frame(A,Y,X,ps)
+  A_X = model.matrix(data=data,object=PS.formula)
+  
+  Y_AX = model.matrix(data,object=OR.formula)
+  
+  par.A_X = est[1:ncol(A_X)]
+  par.Y_AX = est[ncol(A_X)+ 1:ncol(Y_AX)]
+  ATE = est[ncol(A_X)+ncol(Y_AX)+1]
+  
+  data1 = data.frame(A=1,Y,X,ps)
+  data0 = data.frame(A=0,Y,X,ps)
+  
+  #### setup predicted outcomes
+  
+  if (out_type==&quot;binary&quot;) {
+
+    m1 = expit(model.matrix(data1,object=OR.formula)%*%par.Y_AX)
+    m0 = expit(model.matrix(data0,object=OR.formula)%*%par.Y_AX)
+    
+    L1 &lt;-mean(m1)
+    L0 &lt;-mean(m0)
+    
+    U.DR.A_X = c(A-expit(A_X%*%par.A_X)) *(A_X)
+    U.DR.Y_AX = c(Y-expit(Y_AX%*%par.Y_AX)) *(Y_AX)
+
+  } else if (out_type==&quot;count&quot;) {
+    
+    m1 = exp(model.matrix(data1,object=OR.formula)%*%par.Y_AX)
+    m0 = exp(model.matrix(data0,object=OR.formula)%*%par.Y_AX)
+    
+    L1 &lt;-mean(m1)
+    L0 &lt;-mean(m0)
+    
+    U.DR.A_X = c(A-exp(A_X%*%par.A_X)) *(A_X)
+    U.DR.Y_AX = c(Y-exp(Y_AX%*%par.Y_AX)) *(Y_AX)
+    
+  } else if(out_type==&quot;linear&quot;){
+    m1 = model.matrix(data1,object=OR.formula)%*%par.Y_AX
+    m0 = model.matrix(data0,object=OR.formula)%*%par.Y_AX
+    
+    U.DR.A_X = c(A-(A_X%*%par.A_X)) *(A_X)
+    U.DR.Y_AX = c(Y-(Y_AX%*%par.Y_AX)) *(Y_AX)
+  }
+  
+  ###construct estimating equations
+  
+  if(ate_type==&quot;odds_ratio&quot;){
+
+    U.DR.ATE = ATE -log((L1/(1-L1))/(L0/(1-L0)))
+  } else   if(ate_type==&quot;rate_ratio&quot;){
+
+    U.DR.ATE = ATE -log(L1/L0)
+  } else   if(ate_type==&quot;difference&quot;){
+    
+    U.DR.ATE = ATE -(m1-m0)
+  }
+
+  
+  return(cbind(PS=U.DR.A_X,OR=U.DR.Y_AX,ATE=U.DR.ATE))
+}
+
+G_ps = function(est,A,Y,X,PS,PS.formula,OR.formula,out_type,ate_type){
+  return(
+    apply(U.DR_ps(est,A,Y,X,PS,PS.formula,OR.formula,out_type,ate_type),2,sum)
+  )
+}
+
+  
+return.CI_ps &lt;-function(est,A,Y,X,PS,PS.formula,OR.formula,out_type=&quot;linear&quot;,ate_type=&quot;difference&quot;){
+    
+  meat.half=U.DR_ps(est,A,Y,X,PS,PS.formula,OR.formula,out_type = out_type,ate_type = ate_type)
+  
+  bread&lt;-numDeriv::jacobian(func=G_ps,x=est, A=A,Y=Y,X=X,PS=PS, PS.formula=PS.formula, OR.formula=OR.formula,out_type = out_type,ate_type = ate_type)
+  
+  IF = meat.half%*%t(solve(-bread))
+  ### ATE is the last element of est 
+  ATE.var = sum(IF[,ncol(IF)]^2)
+  
+  out&lt;-matrix(nrow=1,ncol=3)
+  if(ate_type==&quot;difference&quot;){
+    out[1,1] &lt;-round(ATE,2)
+    out[1,2] &lt;-round(ATE-qnorm(0.975)*sqrt(ATE.var),2)
+    out[1,3] &lt;-round(ATE+qnorm(0.975)*sqrt(ATE.var),2)
+  } else {
+    out[1,1] &lt;-round(exp(ATE),2)
+    out[1,2] &lt;-round(exp(ATE-qnorm(0.975)*sqrt(ATE.var)),2)
+    out[1,3] &lt;-round(exp(ATE+qnorm(0.975)*sqrt(ATE.var)),2)
+  }
+  colnames(out) &lt;-c(&#39;ATE estimate&#39;,&#39;CI Lower&#39;,&#39;CI Upper&#39;)
+  print(out)
+  
+}</code></pre>
+</div>
+<div id="weighted-rmst" class="section level2">
+<h2>Weighted RMST</h2>
+<pre class="r"><code>#Original Code by Sarah C. Conner
+# see  https://github.com/s-conner/akm-rmst
+# --- RMST Using Adjusted KM ---
+# Time is the time to event
+# Status is 0 if censored, 1 if event
+# Group should be a factor variable
+# Weights can be obtained separately, ie through logistic models
+# Tau is a user-specified truncation point. 
+# If not specified, the default will be the minimum of the each groups&#39; last event time 
+
+akm_rmst &lt;- function(time, status, group, weight=NULL, tau=NULL, alpha=.05, 
+                     xaxismin=0, xaxismax=max(time),plot=FALSE){
+  if(sum(time&lt;0)&gt;0){print(&quot;Error: times must be positive.&quot;)
+  }else{
+    if(sum(weight&lt;=0)&gt;0){print(&quot;Error: weights must be greater than 0.&quot;)
+    }else{
+      if(sum(status!=0 &amp; status!=1)&gt;0){print(&quot;Error: status must be a vector of 0s and/or 1s.&quot;)
+      }else{
+        
+        if(is.null(weight)){weight &lt;- rep(1, length(time))} 
+        data &lt;- data.frame(time, status, group, weight)
+        data &lt;- data[!is.na(data$group) &amp; !is.na(data$time),]
+        data &lt;- data[order(group),] 
+        
+        #--- If tau not specified, use minimum tau from all groups ---
+        j=length(unique(data$group))
+        
+        if(is.null(tau)){
+          taui = rep(999, 3)
+          for (i in (1:j)){
+            groupval &lt;- (levels(data$group)[i])
+            dat_group &lt;- data[which(data$group==(groupval)),]
+            taui[i] &lt;- max(dat_group$time[dat_group$status==1])
+          }
+          tau &lt;- min(taui)
+        }
+        
+        #--- Calculate AKM RMST in each group ---
+        rmst &lt;- rep(999, length(1:j))
+        groupval &lt;- rep(999, length(1:j))
+        rmst_var &lt;- rep(999, length(1:j))
+        rmst_se &lt;- rep(999, length(1:j))
+        if(plot==TRUE){
+          plot(NULL, xlim=c(xaxismin, xaxismax), ylim=c(0,1), xlab=&#39;Time&#39;,ylab=&#39;Adjusted Survival Probability&#39;)
+          title(main=&#39;Adjusted Kaplan-Meier&#39;)
+        }
+
+        for (i in 1:j){
+          groupval[i] &lt;- (levels(data$group)[i])
+          dat_group &lt;- data[which(data$group==(groupval[i])),]
+          
+          #--- AKM ---
+          # Based on &#39;adjusted.KM&#39; function from {IPWsurvival} package
+          # Author: F. Le Borgne and Y. Foucher
+          tj &lt;- c(0,sort(unique(dat_group$time[dat_group$status==1])))
+          dj &lt;- sapply(tj, function(x){sum(dat_group$weight[dat_group$time==x &amp; dat_group$status==1])})
+          yj &lt;- sapply(tj, function(x){sum(dat_group$weight[dat_group$time&gt;=x])})
+          st &lt;- cumprod(1-(dj/yj))
+          m &lt;- sapply(tj, function(x){sum((dat_group$weight[dat_group$time&gt;=x])^2)})
+          mj &lt;- ((yj^2)/m)
+          #ft &lt;- data.frame(time=tj, n_risk=yj, n_event=dj, survival=st, variable=i, m=mj)
+          ft &lt;- data.frame(tj, yj, dj, st, i, mj)
+          
+          #--- RMST ---
+          # Based on &#39;rmst1 function&#39; from {survRM2} package
+          # Author: Hajime Uno, Lu Tian, Angel Cronin, Chakib Battioui, Miki Horiguchi
+          rtime &lt;- ft$tj&lt;=tau
+          tj_r &lt;- sort(c(ft$tj[rtime],tau))
+          st_r &lt;- ft$st[rtime]
+          yj_r &lt;- ft$yj[rtime]
+          dj_r &lt;- ft$dj[rtime]
+          time_diff &lt;- diff(c(0, tj_r))
+          areas &lt;- time_diff * c(1, st_r)
+          rmst[i] &lt;- sum(areas)
+          
+          #--- Variance ---
+          mj_r &lt;- ft$mj[rtime]
+          #var_r &lt;- ifelse((yj_r-dj_r)==0, 0, dj_r /(mj_r *(yj_r - dj_r)))
+          var_r &lt;- ifelse((yj_r-dj_r)==0, 0, dj_r /(yj_r *(yj_r - dj_r)))
+          var_r &lt;- c(var_r,0)
+          rmst_var[i] &lt;- sum(cumsum(rev(areas[-1]))^2 * rev(var_r)[-1])
+          rmst_se[i] &lt;- sqrt(rmst_var[i])
+          
+          #--- Plot AKM ---
+          if(plot==TRUE){
+            lines(ft$tj, ft$st,type=&quot;s&quot;, col=(i+2), lwd=2)
+          }
+
+        }
+      }
+    }
+  }
+  
+  #--- Add legend and tau to plot ---
+  if(plot==TRUE){
+    abline(v=tau, col=1, lty=3, lwd=2)
+    legend(&#39;bottomleft&#39;, paste(&quot;Group&quot;, groupval), lty=rep(1, j), lwd=rep(2, j), col=3:(j+2), 
+           cex=.75, bty =&quot;n&quot;, inset = c(0, 0))
+  }
+
+  
+  #--- Compare RMST between groups and compile output---
+  results &lt;- data.frame(groupval,rmst,rmst_var,rmst_se,tau)
+  pwc &lt;- ((j^2)-j)/2   #number of pairwise comparisons
+  
+  label_diff &lt;- rep(999,(pwc))
+  rmst_diff &lt;- rep(999,(pwc))
+  rmst_diff_se &lt;- rep(999,(pwc))
+  rmst_diff_low &lt;- rep(999,(pwc))
+  rmst_diff_upp &lt;- rep(999,(pwc))
+  rmst_diff_pval &lt;- rep(999,(pwc))
+  
+  label_ratio &lt;- rep(999,(pwc))
+  rmst_logratio &lt;- rep(999,(pwc))
+  rmst_logratio_se &lt;- rep(999,(pwc))
+  rmst_ratio &lt;- rep(999,(pwc))
+  rmst_ratio_low &lt;- rep(999,(pwc))
+  rmst_ratio_upp &lt;- rep(999,(pwc))
+  rmst_logratio_pval &lt;- rep(999,(pwc))
+  
+  output_diff &lt;- data.frame(label_diff,rmst_diff,rmst_diff_se,rmst_diff_low,rmst_diff_upp,rmst_diff_pval)
+  output_ratio &lt;- data.frame(label_ratio,rmst_logratio,rmst_logratio_se,rmst_ratio,rmst_ratio_low,rmst_ratio_upp,rmst_logratio_pval)
+  l &lt;- 1
+  
+  for (i in 1:(j-1)){
+    for (j in (i+1):j){
+      # Based on &#39;rmst2 function&#39; from {survRM2} package
+      # Author: Hajime Uno, Lu Tian, Angel Cronin, Chakib Battioui, Miki Horiguchi
+      
+      #--- RMST Difference ---
+      output_diff[l,]$label_diff &lt;- paste(&#39;Groups&#39;,results[j,]$groupval,&#39;vs.&#39;,results[i,]$groupval,&#39; &#39;)
+      output_diff[l,]$rmst_diff &lt;- (results[j,]$rmst - results[i,]$rmst)
+      output_diff[l,]$rmst_diff_se &lt;- sqrt(results[j,]$rmst_var + results[i,]$rmst_var)
+      output_diff[l,]$rmst_diff_low &lt;- output_diff[l,]$rmst_diff - qnorm(1-alpha/2)*output_diff[l,]$rmst_diff_se
+      output_diff[l,]$rmst_diff_upp &lt;- output_diff[l,]$rmst_diff + qnorm(1-alpha/2)*output_diff[l,]$rmst_diff_se
+      output_diff[l,]$rmst_diff_pval &lt;- 2*(1-pnorm(abs(output_diff[l,]$rmst_diff)/output_diff[l,]$rmst_diff_se))
+      
+      #--- RMST Ratio ---
+      output_ratio[l,]$label_ratio &lt;- paste(&#39;Groups&#39;,results[j,]$groupval,&#39;vs.&#39;,results[i,]$groupval,&#39; &#39;)
+      output_ratio[l,]$rmst_logratio &lt;- (log(results[j,]$rmst) - log(results[i,]$rmst))
+      output_ratio[l,]$rmst_logratio_se &lt;- sqrt(results[j,]$rmst_var/(results[j,]$rmst^2) + results[i,]$rmst_var/(results[i,]$rmst^2))
+      output_ratio[l,]$rmst_ratio &lt;- exp(output_ratio[l,]$rmst_logratio)
+      output_ratio[l,]$rmst_ratio_low &lt;- exp(output_ratio[l,]$rmst_logratio - qnorm(1-alpha/2)*output_ratio[l,]$rmst_logratio_se)
+      output_ratio[l,]$rmst_ratio_upp &lt;- exp(output_ratio[l,]$rmst_logratio + qnorm(1-alpha/2)*output_ratio[l,]$rmst_logratio_se)
+      output_ratio[l,]$rmst_logratio_pval &lt;- 2*(1-pnorm(abs(output_ratio[l,]$rmst_logratio)/output_ratio[l,]$rmst_logratio_se))
+      
+      l &lt;- l+1 #move to next row
+    }
+  }
+  
+  #cat(&quot;\n\n\n&quot;)
+  #cat(paste(&#39;RMST calculated up to tau =&#39;,round(results$tau[1],3)))
+  #cat(&quot;\n\n\n&quot;)
+  
+  #cat (&quot;Restricted Mean Survival Time (RMST) per Group \n\n&quot;)
+  #colnames(results) &lt;- c(&quot;Group&quot;, &quot;RMST&quot;, &quot;Var&quot;, &quot;SE&quot;, &quot;Tau&quot;)
+  #rownames(results) &lt;- c(paste(&quot;Group&quot;, results$Group,&#39; &#39;))
+  #print(round(results[c(2,4)],3))
+  #cat(&quot;\n\n&quot;)
+  
+  #cat (&quot;Restricted Mean Survival Time (RMST) Differences \n\n&quot;)
+  #colnames(output_diff) &lt;- c(&quot;Groups&quot;, &quot;Est.&quot;, &quot;SE&quot;, &quot;CIL&quot;, &quot;CIU&quot;, &quot;p&quot;)
+  #rownames(output_diff) &lt;- c(output_diff$Groups)
+  #print(round(output_diff[c(2,3,4,5,6)],3))
+  #cat(&quot;\n\n&quot;)
+  
+  #cat (&quot;Restricted Mean Survival Time (RMST) Ratios \n\n&quot;)  
+  #colnames(output_ratio) &lt;- c(&quot;Groups&quot;, &quot;Log Est.&quot;, &quot;SE&quot;, &quot;Est.&quot;, &quot;CIL&quot;, &quot;CIU&quot;, &quot;p&quot;)
+  #rownames(output_ratio) &lt;- c(output_ratio$Groups)
+  #print(round(output_ratio[c(2,3,4,5,6,7)],3))
+  return(output_diff)
+}</code></pre>
+</div>
+<div id="sensitivy-analysis---vibration-of-effects" class="section level1">
+<h1>Sensitivy Analysis - Vibration of Effects</h1>
+<pre class="r"><code>###Original Code from  Chirag Patel chirag@hms.harvard.edu
+# see https://github.com/chiragjp/voe/tree/gh-pages/vibration
+###Modified for Propensity score applications
+library(survival, quietly=T)
+library(EValue)
+
+run_model &lt;- function(form, data, family=&#39;gaussian&#39;, weights=NULL,...) {
+  args &lt;- list(form, data = data, ...) 
+  if(family == &#39;gaussian&#39;) {
+    return(do.call(lm, args))
+  }
+  if(family == &#39;cox&#39;) {
+    return(do.call(coxph, args))
+  }
+  if(family == &#39;binomial&#39;) {
+    args &lt;- list(form, data, family=binomial(),weights=weights, ...)
+    return(do.call(glm, args))
+  }
+  if(family == &#39;poisson&#39;) {
+    args &lt;- list(form, data, family=poisson(), ...)
+    return(do.call(glm, args))
+  }
+  if(family==&#39;match&#39;){
+    args &lt;- list(form, data, method = &quot;nearest&quot;,caliper=.2,ratio=4, ...)
+    return(do.call(matchit, args))
+  }
+  if(family == &#39;quasibinomial&#39;) {
+    args &lt;- list(form, design=data, family=binomial(link=&#39;logit&#39;), ...)
+    return(do.call(svyglm, args))
+  }
+} 
+
+
+conductVibrationForK_ps &lt;- function(base_formula,base_out_formula,dataFrame,adjustby,k=1,family=c(&#39;gaussian&#39;, &#39;binomial&#39;, &#39;cox&#39;,&#39;poisson&#39;), print_progress=T, ...) {
+  initFrame &lt;- function(nrows,ncols) {
+    matrix(NA,nrows,ncols)
+  }
+  
+  
+  addToBase &lt;- function(base_formula, adjustingVariables) {
+    form &lt;- base_formula
+    if(length(adjustingVariables)) {
+      addStr &lt;- as.formula(sprintf(&#39;~ . + %s&#39;, paste(adjustingVariables, collapse=&#39;+&#39;)))
+      form &lt;- update.formula(base_formula, addStr)
+    }
+    return(form)
+  }
+  
+  
+  variablename &lt;- attr(terms(base_formula), &#39;term.labels&#39;)[1]
+  varname &lt;-&#39;treatment&#39; #all.vars(as.formula(sprintf(&#39;~%s&#39;, variablename)))
+  if(print_progress) print(varname);
+  
+  if(class(adjustby)==&#39;formula&#39;) {
+    adjustby &lt;- attr(terms(adjustby), &#39;term.labels&#39;)
+  }
+  n &lt;- length(adjustby)
+  varComb &lt;- combn(n, k)
+  retFrame &lt;- NULL
+  retFrameCounter &lt;- 1
+  bicFrame &lt;- NULL
+  for(ii in 1:ncol(varComb)) { # cycle through each possibility
+    if(print_progress) cat(sprintf(&#39;%i/%i\n&#39;,ii, ncol(varComb)));
+    
+    adjustingVariables &lt;- adjustby[varComb[, ii]]
+    strComb &lt;- paste(sort(varComb[, ii]), collapse=&#39;,&#39;)
+    form &lt;- addToBase(base_formula,adjustingVariables)
+    if(print_progress) print(form);
+    ps &lt;-run_model(form,dataFrame,family=&#39;binomial&#39;)
+    
+    
+    #MODIFY SECTION BASED ON PROPENSITY METHOD
+   dataFrame$pr_score &lt;- predict(ps, type=&quot;response&quot;)
+   
+   dataFrame$pr_score_trim &lt;-ifelse(dataFrame$pr_score&lt;.01,.01,dataFrame$pr_score)
+   dataFrame$pr_score_trim &lt;-ifelse(dataFrame$pr_score&gt;.99,.99,dataFrame$pr_score_trim)
+   
+   #IPTW
+   #dataFrame$IPTW &lt;-dataFrame$treatment/dataFrame$pr_score_trim + (1-dataFrame$treatment)/(1-dataFrame$pr_score_trim)
+   
+   #design.ps &lt;- svydesign(ids=~1, weights=~IPTW, data=dataFrame)
+   
+ #Matched
+   #matched &lt;-run_model(form,dataFrame,family=&#39;match&#39;)
+  
+  #matched_data &lt;- match.data(matched)
+    ## run the model
+   
+    est &lt;- tryCatch(
+      #matched
+      #run_model(base_out_formula,matched_data,family=&#39;binomial&#39;,weights =matched_data$weights ), 
+      #spline
+      #run_model(base_out_formula,dataFrame,family=&#39;binomial&#39;),
+      #IPTW
+      #run_model(base_out_formula,design.ps,family=&#39;quasibinomial&#39; ), 
+      error=function(err) {
+        message(err)
+        return(NULL)
+      }
+    )
+    
+    if(!is.null(est)) {
+      ## collect the result
+      ## do unweightedEst here...
+      
+      frm &lt;- coef(summary(est))
+      bicMod &lt;- getBIC(est) # do BIC
+      ## modify the above...
+      ### need to get nlevels of variable 
+      rowIndex &lt;- grep(varname, rownames(frm))
+      nLevels &lt;- length(rowIndex)
+      
+      if(length(rowIndex) &amp; is.null(retFrame)) {
+        nrows &lt;- ncol(varComb) * nLevels 
+        ncols &lt;- ncol(frm)
+        retFrame &lt;- initFrame(nrows,ncols+2) ## need to add 2 columns for the combination and factor_level
+        bicFrame &lt;- initFrame(ncol(varComb), 3) #
+        colnames(retFrame) &lt;- c(colnames(frm), &#39;combination_index&#39;, &#39;factor_level&#39;)
+        colnames(bicFrame) &lt;- c(&#39;edf&#39;, &#39;bic&#39;, &#39;combination_index&#39;)
+      }
+      
+      bicFrame[ii, &#39;combination_index&#39;] &lt;- ii
+      bicFrame[ii, &#39;edf&#39;] &lt;- bicMod[1]
+      bicFrame[ii, &#39;bic&#39;] &lt;- bicMod[2]
+      
+      for(jj in 1:length(rowIndex)) {
+        retFrame[retFrameCounter, 1:ncol(frm)] &lt;- frm[rowIndex[jj], ] 
+        retFrame[retFrameCounter, ncol(frm)+1] &lt;- ii
+        retFrame[retFrameCounter, ncol(frm)+2] &lt;- jj
+        retFrameCounter &lt;- retFrameCounter+1
+      } 
+      
+    }
+    
+  }
+  return(list(vibration=retFrame,bic=bicFrame, k=k,combinations=varComb, family=family, base_formula=base_formula, adjust=adjustby))
+}
+
+getBIC &lt;- function(mod) {
+  return(extractAIC(mod)) # do BIC
+}
+
+recomputePvalue &lt;- function(allData, zStatColName, pValColName) {
+  ### some pvalues estimated at 0 because test statistics so large; recompute their pvalues
+  zeroPval &lt;- !is.na(allData[,pValColName]) &amp; (allData[,pValColName] == 0)
+  allData[zeroPval, pValColName] &lt;- pnorm(abs(allData[zeroPval, zStatColName]), lower.tail=F)*2 #two sided pvalue
+  return(allData)
+}
+
+conductVibration_ps &lt;- function(base_formula,base_out_formula,dataFrame,adjustby,family=c(&#39;gaussian&#39;, &#39;binomial&#39;, &#39;cox&#39;,&#39;poisson&#39;), kMin=NULL, kMax=NULL, print_progress=T, ...) {  
+  if(is.null(kMin)) {
+    kMin &lt;- 1
+  }
+  if(is.null(kMax)) {
+    n &lt;- length(attr(terms(adjustby), &#39;term.labels&#39;))
+    kMax &lt;- n - 1
+  }
+  cat(sprintf(&#39;running models; k start:%i, k stop:%i\n&#39;, kMin, kMax))
+  retFrame &lt;- list()
+  ii &lt;- 1
+  for(k in kMin:kMax) {
+    vib &lt;- conductVibrationForK_ps(base_formula, base_out_formula,dataFrame, adjustby, k, family, print_progress, ...)
+    retFrame[[ii]] &lt;- vib
+    ii &lt;- ii + 1
+  }
+  ret &lt;- gatherFrames(retFrame)
+  return(ret)
+}
+
+gatherVibration &lt;- function(returnFrames) {
+  ## gathers up results from multiple runs; see conductVibration
+  nrows &lt;- c()
+  for(ii in 1:length(returnFrames)) {
+    nrows &lt;- c(nrows, nrow(returnFrames[[ii]]$vibration))
+  }
+  
+  retFrame &lt;- matrix(nrow=sum(nrows), ncol=ncol(returnFrames[[1]]$vibration)+1)
+  colnames(retFrame) &lt;- c(colnames(returnFrames[[1]]$vibration), &#39;k&#39;)
+  
+  startIndex &lt;- 1
+  for(ii in 1:length(returnFrames)) {
+    ncols &lt;- ncol(returnFrames[[ii]]$vibration)
+    retFrame[startIndex:(startIndex+nrows[ii]-1), 1:ncols] &lt;- returnFrames[[ii]]$vibration
+    retFrame[startIndex:(startIndex+nrows[ii]-1), ncols+1] &lt;- returnFrames[[ii]]$k
+    startIndex &lt;- startIndex+nrows[ii]
+  }
+  return(retFrame)
+}
+
+gatherVibrationBIC &lt;- function(returnFrames) {
+  nrows &lt;- c()
+  for(ii in 1:length(returnFrames)) {
+    nrows &lt;- c(nrows, nrow(returnFrames[[ii]]$bic))
+  }
+  
+  retFrame &lt;- matrix(nrow=sum(nrows), ncol=ncol(returnFrames[[1]]$bic)+1)
+  colnames(retFrame) &lt;- c(colnames(returnFrames[[1]]$bic), &#39;k&#39;)
+  
+  startIndex &lt;- 1
+  for(ii in 1:length(returnFrames)) {
+    ncols &lt;- ncol(returnFrames[[ii]]$bic)
+    retFrame[startIndex:(startIndex+nrows[ii]-1), 1:ncols] &lt;- returnFrames[[ii]]$bic
+    retFrame[startIndex:(startIndex+nrows[ii]-1), ncols+1] &lt;- returnFrames[[ii]]$k
+    startIndex &lt;- startIndex+nrows[ii]
+  }
+  return(retFrame)  
+}
+
+column_headers &lt;- function(vibFrame, family) {
+  existingColnames &lt;- colnames(vibFrame)
+  newColnames &lt;- NULL
+  if(family == &#39;cox&#39;) {
+    isRobust &lt;- grep(&#39;robust&#39;, existingColnames)
+    # if(isRobust) {
+    #return(c(&#39;estimate&#39;, &#39;HR&#39;, &#39;se&#39;, &#39;robust_se&#39;, &#39;z&#39;, &#39;pvalue&#39;, &#39;combination_index&#39;, &#39;factor_level&#39;, &#39;k&#39;))
+    # } else {
+    return(c(&#39;estimate&#39;, &#39;OR&#39;, &#39;se&#39;, &#39;z&#39;, &#39;pvalue&#39;, &#39;combination_index&#39;, &#39;factor_level&#39;, &#39;k&#39;))
+    #}
+  } else if(family == &#39;gaussian&#39;) {
+    ## to do
+    existingColnames[1] &lt;- &#39;estimate&#39;
+    existingColnames[length(existingColnames) - 4] &lt;- &#39;pvalue&#39;
+    return(existingColnames)
+  } else if(family == &#39;binomial&#39; | family == &#39;poisson&#39;) {
+    ## to do
+    existingColnames[1] &lt;- &#39;estimate&#39;
+    existingColnames[length(existingColnames) - 4] &lt;- &#39;pvalue&#39;
+    return(existingColnames)
+  } 
+  ### fill in the rest later for other families
+  return(existingColnames)
+}
+
+harmonizeFrame &lt;- function(vibFrame, family) {
+  vibFrame &lt;- as.data.frame(vibFrame)
+  colnames(vibFrame) &lt;- column_headers(vibFrame, family)
+  if(family %in% c(&#39;binomial&#39;,&#39;poisson&#39;)) {
+    vibFrame$HR &lt;- exp(vibFrame$estimate)
+  }
+  return(vibFrame)
+}
+
+gatherFrames &lt;- function(returnFrames) {
+  bic &lt;- gatherVibrationBIC(returnFrames)
+  vibration &lt;- gatherVibration(returnFrames)
+  combinations &lt;- list()
+  for(ii in 1:length(returnFrames)) {
+    combinations[[ii]] &lt;- returnFrames[[ii]]$combinations
+  }
+  family &lt;- returnFrames[[1]]$family
+  base_formula &lt;- returnFrames[[1]]$base_formula
+  adjust &lt;- returnFrames[[1]]$adjust
+  
+  vibration &lt;- harmonizeFrame(vibration, family)
+  vibration &lt;- recomputePvalue(vibration, &#39;Pr(&gt;|t|)&#39;,&#39;pvalue&#39;)
+  return(list(vibFrame=vibration, bicFrame=bic, combinations=combinations, adjust=adjust, family=family, base_formula=base_formula))
+}
+
+
+## vibration of effects 
+## plot the VoE distribution
+## Chirag Patel cjp@stanford.edu
+## 07/05/13
+
+
+library(ggplot2)
+library(RColorBrewer)
+CBB_PALETTE &lt;- c(&quot;#000000&quot;, &quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#009E73&quot;, &quot;#F0E442&quot;, &quot;#0072B2&quot;, &quot;#D55E00&quot;, &quot;#CC79A7&quot;)
+
+
+vib2d_cox &lt;- function(vibObj, factor_num=1,nbins=20) {
+  vibFrame &lt;- vibObj$vibFrame
+
+  nFactor &lt;- length(unique(vibFrame$factor_level))
+  yRange &lt;- range(c(-log10(.05), -log10(vibFrame$&#39;Pr(&gt;|t|)&#39;)), na.rm=T)
+  xRange &lt;- range(vibFrame$HR, na.rm=T)
+  probs &lt;- c( 0.5)
+  hProbs &lt;- c(0.5)
+  subFrame &lt;- subset(vibFrame, factor_level == factor_num)
+  subFrame$factor_level &lt;- NULL
+  subFrame$pvalue &lt;-subFrame$`Pr(&gt;|t|)`
+  estLevel &lt;- statPerK(subFrame)
+  estLevel$HR &lt;- exp(estLevel$estimate)
+  pQuant &lt;- quantilesPvalue(subFrame, probs)
+  hQuant &lt;- quantilesHR(subFrame, hProbs)
+  
+  #RHR &lt;- round(hQuant[3,&#39;HR&#39;]/hQuant[1,&#39;HR&#39;], 2)
+  #RPvalue &lt;- round(-log10(pQuant[1,&#39;pvalue&#39;]) + log10(pQuant[3,&#39;pvalue&#39;]), 2)
+  p &lt;- ggplot(subFrame, aes(HR, -log10(pvalue)))
+  if(sum(colnames(subFrame) == &#39;has_variable&#39;)) {
+    p &lt;- p + geom_hex(aes(colour=factor(has_variable)),bins=nbins) + scale_fill_gradientn(name=&#39;&#39;, colours=c(&#39;blue&#39;,&#39;yellow&#39;)) 
+  } else {
+    p &lt;- p + geom_hex(bins=nbins) + scale_fill_gradientn(name=&#39;&#39;, colours=c(&#39;blue&#39;,&#39;yellow&#39;)) 
+  }
+  p &lt;- p + geom_point(data=estLevel, color=&#39;red&#39;, shape=1) + geom_line(data=estLevel, color=&#39;red&#39;) 
+  p &lt;- p + geom_text(aes(HR, -log10(pvalue), label=k,vjust=-1), data=estLevel, color=&#39;black&#39;)
+  pQuant$x &lt;- max(subFrame$HR)
+  p &lt;- p + geom_hline(aes(yintercept=-log10(pvalue), alpha=.4), linetype=&#39;dashed&#39;, data=pQuant) 
+  p &lt;- p + geom_text(aes(x=x, y=-log10(pvalue), label=round(probs*100, 2), vjust=-.2), data=pQuant)
+  
+  hQuant$y &lt;- max(c(-log10(subFrame$pvalue), -log10(0.05)))
+  p &lt;- p + geom_vline(aes(xintercept=HR, alpha=.4), linetype=&#39;dashed&#39;, data=hQuant) 
+  p &lt;- p + geom_text(aes(x=HR, y=y, label=round(probs*100, 2), hjust=-.1, vjust=-.1), data=hQuant)
+  p &lt;- p + geom_hline(yintercept=-log10(0.05))
+  p &lt;- p + scale_x_continuous(limits=xRange) + scale_y_continuous(limits=yRange)
+  #p &lt;- p + ggtitle(sprintf(&#39;RHR = %.02f\nRP = %.02f&#39;, RHR, RPvalue)) 
+  p &lt;- p + xlab(&#39;ATE (Odds Ratio Scale)&#39;) + ylab(&#39;-log10(pvalue)&#39;) + theme_bw()
+  return(p)
+}
+
+
+vibcontour_cox &lt;- function(vibObj, factor_num=1, alpha=1) { 
+  vibFrame &lt;- vibObj$vibFrame
+  subFrame &lt;- subset(vibObj$vibFrame, factor_level == factor_num)
+  subFrame$pvalue &lt;-subFrame$`Pr(&gt;|t|)`
+  contourData &lt;- getContoursForPctile(subFrame) 
+  subFrame$factor_level &lt;- NULL 
+  yRange &lt;- range(c(-log10(.05), -log10(vibFrame$&#39;Pr(&gt;|t|)&#39;)), na.rm=T)
+  xRange &lt;- range(vibFrame$HR, na.rm=T)
+  probs &lt;- c(0.5)
+  hProbs &lt;- c(0.5)
+  estLevel &lt;- statPerK(subFrame)
+  estLevel$HR &lt;- exp(estLevel$estimate)
+  pQuant &lt;- quantilesPvalue(subFrame, probs) 
+  hQuant &lt;- quantilesHR(subFrame, hProbs)
+  maxk &lt;-max(vibFrame$k)
+  rowid&lt;- with(vibFrame[vibFrame$k==maxk,], which(HR == quantile(HR, .5, type = 1,na.rm=TRUE)))
+  medianOR &lt;-vibFrame$HR[rowid]
+  loor &lt;-exp(log(medianOR) -1.96*vibFrame$`Std. Error`[rowid])
+  upor &lt;-exp(log(medianOR) +1.96*vibFrame$`Std. Error`[rowid])
+  Evalues &lt;-evalues.RR(medianOR,loor,upor)
+  if(loor&lt;=1 &amp; upor&gt;=1){
+    FEvalue &lt;-as.character(c(1,1,1))
+  } else {
+    FEvalue &lt;-as.character(round(Evalues[2,],2))
+  }
+  #RHR &lt;- round(hQuant[3,&#39;HR&#39;]/hQuant[1,&#39;HR&#39;], 2)
+  #RPvalue &lt;- round(-log10(pQuant[1,&#39;pvalue&#39;]) + log10(pQuant[3,&#39;pvalue&#39;]), 2)
+
+  
+  p &lt;- ggplot(subFrame, aes(x=HR, y=-log10(pvalue))) 
+  if(sum(colnames(subFrame) == &#39;has_variable&#39;)) {
+    p &lt;- p + geom_point(aes(colour=factor(has_variable)), alpha=alpha) + scale_colour_manual(values=CBB_PALETTE)
+  } else {
+    p &lt;- p + geom_point(alpha=alpha)
+  }
+  p &lt;- p + geom_contour(data=contourData$densityData, aes(x=x,y=y,z=z), breaks=contourData$levels, size=.3)
+  p &lt;- p + geom_point(data=estLevel, color=&#39;red&#39;, shape=1) + geom_line(data=estLevel, color=&#39;red&#39;) 
+  p &lt;- p + geom_text(aes(HR, -log10(pvalue), label=k,vjust=-1), data=estLevel, color=&#39;black&#39;)       
+  pQuant$x &lt;- max(subFrame$HR)
+  p &lt;- p + geom_hline(aes(yintercept=-log10(pvalue)), linetype=&#39;dashed&#39;, data=pQuant) 
+  p &lt;- p + geom_text(aes(x=x, y=-log10(pvalue), label=round(probs*100, 2), vjust=-.2), data=pQuant)
+  
+  hQuant$y &lt;- max(c(-log10(subFrame$pvalue), -log10(0.05)))
+  p &lt;- p + geom_vline(aes(xintercept=HR), linetype=&#39;dashed&#39;, data=hQuant) 
+  p &lt;- p + geom_text(aes(x=HR, y=y, label=round(probs*100, 2), hjust=-.1, vjust=-.1), data=hQuant)
+  
+  p &lt;- p + geom_hline(yintercept=-log10(0.05))
+  p &lt;- p + scale_x_continuous(limits=xRange) + scale_y_continuous(limits=yRange)
+  grob &lt;- grobTree(textGrob(paste0(&#39;Evalue for Full PS Model:&#39;, FEvalue[1]), x=0.05,  y=0.9, hjust=0,
+                            gp=gpar(col=&quot;black&quot;, fontsize=12, fontface=&quot;italic&quot;)))
+  p &lt;- p  + annotation_custom(grob) # paste0(&#39;Evalue&#39;,&quot;: &quot;, FEvalue[1],&quot; &quot;,&quot;(&quot;,FEvalue[2],&quot;,&quot;, FEvalue[3],&quot;)&quot;),
+                      
+  p &lt;- p + ggtitle(&quot;Oral Therapy, IPTW&quot;)
+  p &lt;- p + xlab(&#39;ATE (Odds Ratio Scale)&#39;) + ylab(&#39;-log10(pvalue)&#39;) + theme_bw()
+  return(p)
+}
+
+find_adjustment_variable &lt;- function(vibObj, adjustment_num=1) {
+  vibFrame &lt;- vibObj$vibFrame
+  combinations &lt;- vibObj$combinations
+  ks &lt;- unique(vibFrame$k)
+  vibFrame[, &#39;has_variable&#39;] &lt;- 0
+  for(ii in 1:length(ks)) {
+    k &lt;- ks[ii]
+    adjusters &lt;- combinations[[ii]]
+    combIndex &lt;- which(apply(adjusters, 2, function(arr) {sum(arr==adjustment_num)})==1)  ## gives column
+    if(length(combIndex)) {
+      vibFrame[vibFrame$k == k &amp; (vibFrame$combination_index %in% combIndex), &#39;has_variable&#39;] &lt;- 1
+    }
+  }
+  vibObj$vibFrame &lt;- vibFrame
+  return(vibObj)
+}
+
+plot_vibration_cox &lt;- function(vibObj, type=c(&#39;bin&#39;, &#39;contour&#39;), factor_num=1, adjustment_num=NA, ...) {
+  ### plots the vibration of effects for a cox model
+  if(length(type)) {
+    type &lt;- type[1]
+  }
+  
+  if(!is.na(adjustment_num)) {
+    vibObj &lt;- find_adjustment_variable(vibObj, adjustment_num)
+  }
+  
+  if(type == &#39;bin&#39;) {
+    return(vib2d_cox(vibObj, factor_num, ...))
+  } else if(type == &#39;contour&#39;) {    
+    return(vibcontour_cox(vibObj, factor_num, ...))
+  }
+  
+  return(NULL)
+}
+
+
+#other called functions
+## Chirag Patel
+## 4/18/2013
+### functions to post processes a vibFrame
+
+library(MASS)
+
+meanEstimate &lt;- function(subFrame) {
+  pval &lt;- median(subFrame$pvalue)
+  hr &lt;- median(subFrame$estimate)
+  return(data.frame(estimate=hr, pvalue=pval))
+}
+
+mean_manhattan &lt;- function(arr) {
+  ### computes a manhattan distance (pairwise differences)
+  ### then computes the relative distance and means it
+  dd &lt;- as.matrix(dist(arr, method=&#39;manhattan&#39;))
+  dd &lt;- dd / abs(arr)
+  mean(dd[upper.tri(dd)])*100
+}
+
+cdfPerPvalue &lt;- function(subFrame, pvalues=c(10^(-10:-2), .02, .03, .04, .05, .06, .07, .08, .09, .1)) {
+  Fn &lt;- ecdf(subFrame$pvalue)
+  data.frame(pvalue=pvalues,cdf=Fn(pvalues), number=Fn(pvalues)*nrow(subFrame))
+}
+
+quantilesPvalue &lt;- function(subFrame, probs=c(0.01, .25, 0.5, .75, 0.99)) {
+  qs &lt;- quantile(subFrame$pvalue, probs)
+  data.frame(probs=probs, pvalue=qs)
+}
+
+quantilesHR &lt;- function(subFrame, probs=c()) {
+  ### change this to estimate.
+  qs &lt;- quantile(subFrame$estimate, probs)
+  data.frame(probs=probs, HR=exp(qs))
+}
+
+quantilesEstimate &lt;- function(subFrame, probs) {
+  qs &lt;- quantile(subFrame$estimate, probs)
+  data.frame(probs=probs, estimate=qs)
+}
+
+
+statPerK &lt;- function(vibFrame) {
+  ### computes a mean HR and median p-value for each k and vibration for each k
+  estLevel &lt;- data.frame()
+  ks &lt;- sort(unique(vibFrame$k))
+  levs &lt;- unique(vibFrame$factor_level)
+  for(ii in ks) {
+    subFrame &lt;- subset(vibFrame, k==ii)
+    mn &lt;- meanEstimate(subFrame)
+    estLevel &lt;- rbind(estLevel, data.frame(k=ii, estimate=mn$estimate, pvalue=mn$pvalue))
+  }
+  estLevel
+}
+
+statPerKandFactor &lt;- function(vibFrame) {
+  levs &lt;- unique(vibFrame$factor_level)
+  estLevels &lt;- data.frame()
+  for(ii in levs) {
+    subFrame &lt;- subset(vibFrame, factor_level == ii)
+    estLevel &lt;- statPerK(subFrame)
+    estLevel$factor_level &lt;- ii
+    estLevels &lt;- rbind(estLevels, estLevel)
+  }
+  return(estLevels)
+}
+
+
+summary.vibration &lt;- function(vibFrame, bicFrame=NULL) {
+  ### this is for cox model.
+  
+  ### take in a data.frame and compute all summary stats
+  ## do per factor? -- yes.
+  # HR 99 and HR 1 -- if sign change for the 99 vs. 1?
+  # P 99 and P 1; how many &lt; thresholds
+  # HR 99/ HR 1
+  # -log10P1 + log10P99
+  # stat per K (mean HR/ median p per K/factor)
+  levs &lt;- unique(vibFrame$factor_level)
+  summaryFrame &lt;- data.frame()
+  pvalue_cdf &lt;- data.frame()
+  bestMod &lt;- NULL;
+  if(!is.null(bicFrame)) {
+    combInd &lt;- bicFrame[which.min(bicFrame[,2]), 3]
+    bestK &lt;- bicFrame[which.min(bicFrame[,2]), 4]
+    bestMod &lt;- subset(vibFrame, k == bestK &amp; combination_index == combInd)
+  }
+  for(ii in levs) {
+    subFrame &lt;- subset(vibFrame, factor_level == ii)
+    
+    hrs &lt;- quantilesHR(subFrame, probs=c(.01,.5, .99))
+    ps &lt;- quantilesPvalue(subFrame, probs=c(.01,.5, .99))
+    hr_01 &lt;- hrs[1, &#39;HR&#39;]
+    hr_50 &lt;- hrs[2, &#39;HR&#39;]
+    hr_99 &lt;- hrs[3, &#39;HR&#39;]
+    p_01 &lt;- ps[1, &#39;pvalue&#39;]
+    p_50 &lt;- ps[2, &#39;pvalue&#39;]
+    p_99 &lt;- ps[3, &#39;pvalue&#39;]
+    RHR &lt;- hr_99/hr_01
+    vibP &lt;- -log10(p_01) + log10(p_99)
+    frm &lt;- data.frame(HR_01=hr_01, HR_50=hr_50, HR_99=hr_99,pvalue_01=p_01,pvalue_50=p_50, pvalue_99=p_99, rHR=RHR, rPvalue=vibP, factor_level=ii)
+    if(!is.null(bestMod)) {
+      bestSub &lt;- subset(bestMod, factor_level == ii)
+      frm$HR_bic &lt;- bestSub[1, &#39;HR&#39;]
+      frm$pvalue_bic &lt;- bestSub[1, &#39;pvalue&#39;]
+    }
+    
+    summaryFrame &lt;- rbind(summaryFrame, frm)
+    cdfPerP &lt;- cdfPerPvalue(subFrame)
+    cdfPerP$factor_level &lt;- ii
+    pvalue_cdf &lt;- rbind(pvalue_cdf, cdfPerP)
+  }
+  
+  perK &lt;- statPerKandFactor(vibFrame)
+  
+  return(list(summary=summaryFrame, pvalue_cdf = pvalue_cdf, summary_per_k=perK))
+}
+summary.vibration.stratum &lt;- function(vibFrame) {
+  ## gets a summary per stratum
+  ## for cox model. 
+  strata &lt;- unique(vibFrame$stratum)
+  summaryFrame &lt;- data.frame()
+  summary_per_k &lt;- data.frame()
+  pvalue_cdf &lt;- data.frame()
+  for(ii in strata) {
+    perStrat &lt;- summary.vibration(subset(vibFrame, stratum == ii))
+    perStrat$summary[, &#39;stratum&#39;] &lt;- ii
+    perStrat$summary_per_k[, &#39;stratum&#39;] &lt;- ii
+    perStrat$pvalue_cdf[, &#39;stratum&#39;] &lt;- ii
+    summaryFrame &lt;- rbind(summaryFrame, perStrat$summary)
+    summary_per_k &lt;- rbind(summary_per_k, perStrat$summary_per_k)
+    pvalue_cdf &lt;- rbind(pvalue_cdf, perStrat$pvalue_cdf)
+  }
+  
+  return(list(summary=summaryFrame, pvalue_cdf=pvalue_cdf, summary_per_k=summary_per_k))
+}
+
+getContoursForPctile &lt;- function(vib, pctiles=seq(.05, .95, by=.05)) {
+  dens &lt;- kde2d(vib$HR, -log10(vib$pvalue), n = 200)
+  ### this is from http://stackoverflow.com/questions/16225530/contours-of-percentiles-on-level-plot/16228938#16228938
+  ### HPDRegionplot code in the emdbook package
+  dx &lt;- diff(dens$x[1:2])
+  dy &lt;- diff(dens$y[1:2])
+  sz &lt;- sort(dens$z)
+  c1 &lt;- cumsum(sz) * dx * dy
+  levels &lt;- sapply(pctiles, function(x) {
+    approx(c1, sz, xout = 1 - x)$y
+  })
+  densityData &lt;- data.frame(expand.grid(x = dens$x, y = dens$y), z = as.vector(dens$z))
+  return(list(levels=levels, densityData=densityData))
+}</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
