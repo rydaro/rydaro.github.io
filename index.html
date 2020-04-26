@@ -506,20 +506,20 @@ table(oral60$treatment,oral60$pr_cut)</code></pre>
 ##       1   2   3   4   5
 ##   0 210 116  75  54  16
 ##   1 357 454 488 513 551</code></pre>
-<pre class="r"><code>cells &lt;-table(oral60$er60,oral60$treatment,oral60$pr_cut)
-
-ai &lt;- cells[1,1,]
-bi &lt;- cells[1,2,]
-ci &lt;- cells[2,1,]
-di &lt;- cells[2,2,]
-
-library(PSAgraphics)
+<pre class="r"><code>library(PSAgraphics)
 model_mat &lt;-model.matrix(~ +agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
   hypertension+CHF+osteoporosis+arrythmia+uro -1,oral60)
 
 cv.bal.psa(covariates = model_mat, treatment = oral60$treatment, propensity = oral60$pr_score,strata=5)</code></pre>
 <p><img src="index_files/figure-html/stratification-1.png" width="768" /></p>
 <pre class="r"><code>library(meta)
+
+cells &lt;-table(oral60$er60,oral60$treatment,oral60$pr_cut)
+
+ai &lt;- cells[1,1,]
+bi &lt;- cells[1,2,]
+ci &lt;- cells[2,1,]
+di &lt;- cells[2,2,]
 
 meta &lt;-metabin(event.e = di, n.e = ci + di,
                       event.c = bi, n.c = bi + ai,

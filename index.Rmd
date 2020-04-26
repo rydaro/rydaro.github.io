@@ -526,12 +526,7 @@ oral60$pr_cut <- as.numeric(factor(quantcut(oral60$pr_score_trim,q=5),labels=c(1
 table(oral60$treatment,oral60$pr_cut)
 
 
-cells <-table(oral60$er60,oral60$treatment,oral60$pr_cut)
 
-ai <- cells[1,1,]
-bi <- cells[1,2,]
-ci <- cells[2,1,]
-di <- cells[2,2,]
 
 library(PSAgraphics)
 model_mat <-model.matrix(~ +agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
@@ -539,7 +534,16 @@ model_mat <-model.matrix(~ +agecat+racecat+educat+housecat+Division+Product+met+
 
 cv.bal.psa(covariates = model_mat, treatment = oral60$treatment, propensity = oral60$pr_score,strata=5)
 
+
+
 library(meta)
+
+cells <-table(oral60$er60,oral60$treatment,oral60$pr_cut)
+
+ai <- cells[1,1,]
+bi <- cells[1,2,]
+ci <- cells[2,1,]
+di <- cells[2,2,]
 
 meta <-metabin(event.e = di, n.e = ci + di,
                       event.c = bi, n.c = bi + ai,
@@ -1416,7 +1420,7 @@ p <- plot_diff(doccbps, view="t",
 ### Time Varying Outcome: Opioid Usage Post Treatment 
 
 Lastly, in those patients who had an opioid prescribed at any time, we evaluated the longitudinally varying repeated measures outcome of opioids prescribed in MME per month for patients who had baseline opioid use before starting one of the focus treatments for their prostate cancer. Each patient included in this subset had baseline opioid prescriptions (30 days prior to start of treatment) as well as 180 days of opioids prescribed after initiation of treatment. The opioid prescriptions were defined in 30-day periods. Figure 3 shows the mean of each 30-day period across the three treatment groups, with a smooth showing the overall trend. 
-```{r opioid_plot, echo=TRUE}
+```{r opioid_plot, echo=TRUE, message=FALSE, warning=FALSE}
 plot_data <-firstline_opioid %>%
   group_by(t,Brand) %>%
   summarise(mean = mean(monthtotal), std=sqrt(var(monthtotal)), n = n(),
