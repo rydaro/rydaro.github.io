@@ -498,6 +498,38 @@ oral60$IPTW &lt;-oral60$treatment/oral60$pr_score_trim + (1-oral60$treatment)/(1
 <div id="stratification" class="section level3">
 <h3>Stratification</h3>
 <p>Here we provide a brief example of using propensity score stratification. Once the propensity score is calculated, the data can be stratified based on specified quantiles of the propensity score distribution. Researchers suggest 5 strata is often sufficient. Balance diagnostics can then be checked within each strata. If sufficient balance is achieved, estimates from each strata can be estimated and then combined as if a meta-analysis, weighting each group inversely by the variance. R package <em>PSAgraphics</em> is a quick way to check balance, and meta can be used to obtain final estimate</p>
+<pre class="r"><code>library(gtools)
+
+oral60$pr_cut &lt;- as.numeric(factor(quantcut(oral60$pr_score_trim,q=5),labels=c(1,2,3,4,5)))
+table(oral60$treatment,oral60$pr_cut)</code></pre>
+<pre><code>##    
+##       1   2   3   4   5
+##   0 210 116  75  54  16
+##   1 357 454 488 513 551</code></pre>
+<pre class="r"><code>cells &lt;-table(oral60$er60,oral60$treatment,oral60$pr_cut)
+
+ai &lt;- cells[1,1,]
+bi &lt;- cells[1,2,]
+ci &lt;- cells[2,1,]
+di &lt;- cells[2,2,]
+
+library(PSAgraphics)
+model_mat &lt;-model.matrix(~ +agecat+racecat+educat+housecat+Division+Product+met+Aso+diabetes+
+  hypertension+CHF+osteoporosis+arrythmia+uro -1,oral60)
+
+cv.bal.psa(covariates = model_mat, treatment = oral60$treatment, propensity = oral60$pr_score,strata=5)</code></pre>
+<p><img src="index_files/figure-html/stratification-1.png" width="768" /></p>
+<pre class="r"><code>library(meta)
+
+meta &lt;-metabin(event.e = di, n.e = ci + di,
+                      event.c = bi, n.c = bi + ai,
+                      sm = &quot;OR&quot;, studlab = paste(&quot;propensity&quot;, c(1:5), sep = &quot;&quot;),
+                      method=&quot;MH&quot;,
+                      label.e=&quot;Oral Therapy&quot;, label.c=&quot;Immunotherapy&quot;, outclab = &quot;ER Visit&quot;,
+                      comb.fixed = TRUE, comb.random = FALSE)
+
+forest.meta(meta)</code></pre>
+<p><img src="index_files/figure-html/stratification-2.png" width="768" /></p>
 </div>
 <div id="assessment-of-covariate-balance" class="section level3">
 <h3>Assessment of Covariate Balance</h3>

@@ -519,7 +519,7 @@ oral60$IPTW <-oral60$treatment/oral60$pr_score_trim + (1-oral60$treatment)/(1-or
 
 ###Stratification
 Here we provide a brief example of using propensity score stratification. Once the propensity score is calculated, the data can be stratified based on specified quantiles of the propensity score distribution. Researchers suggest 5 strata is often sufficient. Balance diagnostics can then be checked within each strata. If sufficient balance is achieved, estimates from each strata can be estimated and then combined as if a meta-analysis, weighting each group inversely by the variance. R package *PSAgraphics* is a quick way to check balance, and meta can be used to obtain final estimate 
-```{r stratification, eval=FALSE, include=FALSE}
+```{r stratification, echo=TRUE}
 library(gtools)
 
 oral60$pr_cut <- as.numeric(factor(quantcut(oral60$pr_score_trim,q=5),labels=c(1,2,3,4,5)))
@@ -550,15 +550,6 @@ meta <-metabin(event.e = di, n.e = ci + di,
 
 forest.meta(meta)
 
-est_out <-function(model_object){
-  out<-matrix(nrow=1,ncol=3)
-    out[1,1] <-round(summary(model_object)$coefficients[2,1],2)   
-    out[1,2] <-round(summary(model_object)$coefficients[2,2],2)
-    out[1,3] <-round(dim(model_object$data)[1]/2834,3)
-  colnames(out) <-c('estimate','std','weight')
-  rownames(out)<-names(model_object$coefficients[2])
-  print(out)
-}
 
 
 
