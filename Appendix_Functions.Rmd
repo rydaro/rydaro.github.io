@@ -420,6 +420,7 @@ akm_rmst <- function(time, status, group, weight=NULL, tau=NULL, alpha=.05,
 ###Modified for Propensity score applications
 library(survival, quietly=T)
 library(EValue)
+library(survey)
 
 run_model <- function(form, data, family='gaussian', weights=NULL,...) {
   args <- list(form, data = data, ...) 
@@ -507,7 +508,7 @@ conductVibrationForK_ps <- function(base_formula,base_out_formula,dataFrame,adju
       #matched
       #run_model(base_out_formula,matched_data,family='binomial',weights =matched_data$weights ), 
       #spline
-      #run_model(base_out_formula,dataFrame,family='binomial'),
+      run_model(base_out_formula,dataFrame,family='binomial'),
       #IPTW
       #run_model(base_out_formula,design.ps,family='quasibinomial' ), 
       error=function(err) {
@@ -669,7 +670,8 @@ gatherFrames <- function(returnFrames) {
   adjust <- returnFrames[[1]]$adjust
   
   vibration <- harmonizeFrame(vibration, family)
-  vibration <- recomputePvalue(vibration, 'Pr(>|t|)','pvalue')
+  #change based on method
+  vibration <- recomputePvalue(vibration, 'Pr(>|z|)','pvalue')
   return(list(vibFrame=vibration, bicFrame=bic, combinations=combinations, adjust=adjust, family=family, base_formula=base_formula))
 }
 
@@ -689,7 +691,7 @@ vib2d_cox <- function(vibObj, factor_num=1,nbins=20) {
   vibFrame <- vibObj$vibFrame
 
   nFactor <- length(unique(vibFrame$factor_level))
-  yRange <- range(c(-log10(.05), -log10(vibFrame$'Pr(>|t|)')), na.rm=T)
+  yRange <- range(c(-log10(.05), -log10(vibFrame$'Pr(>|z|)')), na.rm=T)
   xRange <- range(vibFrame$HR, na.rm=T)
   probs <- c( 0.5)
   hProbs <- c(0.5)
@@ -734,8 +736,8 @@ vibcontour_cox <- function(vibObj, factor_num=1, alpha=1) {
   subFrame$factor_level <- NULL 
   yRange <- range(c(-log10(.05), -log10(vibFrame$'Pr(>|t|)')), na.rm=T)
   xRange <- range(vibFrame$HR, na.rm=T)
-  probs <- c(0.5)
-  hProbs <- c(0.5)
+  probs <- c(0.1,0.5,0.9)
+  hProbs <- c(0.1,0.5,0.9)
   estLevel <- statPerK(subFrame)
   estLevel$HR <- exp(estLevel$estimate)
   pQuant <- quantilesPvalue(subFrame, probs) 
@@ -759,27 +761,29 @@ vibcontour_cox <- function(vibObj, factor_num=1, alpha=1) {
   if(sum(colnames(subFrame) == 'has_variable')) {
     p <- p + geom_point(aes(colour=factor(has_variable)), alpha=alpha) + scale_colour_manual(values=CBB_PALETTE)
   } else {
-    p <- p + geom_point(alpha=alpha)
+    p <- p + geom_point(alpha=alpha,color="grey")
   }
-  p <- p + geom_contour(data=contourData$densityData, aes(x=x,y=y,z=z), breaks=contourData$levels, size=.3)
-  p <- p + geom_point(data=estLevel, color='red', shape=1) + geom_line(data=estLevel, color='red') 
-  p <- p + geom_text(aes(HR, -log10(pvalue), label=k,vjust=-1), data=estLevel, color='black')		
+  p <- p + geom_contour(data=contourData$densityData, aes(x=x,y=y,z=z), breaks=contourData$levels, size=.3,color="navy",alpha=alpha)
+  p <- p + geom_point(data=estLevel, aes(color=k))+ scale_color_gradient(low="yellow", high="red") + geom_line(data=estLevel, color='darkorange') 
+  #p <- p + geom_text(aes(HR, -log10(pvalue), label=k,vjust=-1), data=estLevel, color='red4')		
   pQuant$x <- max(subFrame$HR)
-  p <- p + geom_hline(aes(yintercept=-log10(pvalue)), linetype='dashed', data=pQuant) 
+  p <- p + geom_hline(aes(yintercept=-log10(pvalue)), linetype='dashed', data=pQuant,alpha=0.3) 
   p <- p + geom_text(aes(x=x, y=-log10(pvalue), label=round(probs*100, 2), vjust=-.2), data=pQuant)
   
   hQuant$y <- max(c(-log10(subFrame$pvalue), -log10(0.05)))
-  p <- p + geom_vline(aes(xintercept=HR), linetype='dashed', data=hQuant) 
+  p <- p + geom_vline(aes(xintercept=HR), linetype='dashed', data=hQuant,alpha=0.3) 
   p <- p + geom_text(aes(x=HR, y=y, label=round(probs*100, 2), hjust=-.1, vjust=-.1), data=hQuant)
   
-  p <- p + geom_hline(yintercept=-log10(0.05))
+  p <- p + geom_hline(yintercept=-log10(0.05),color="darkmagenta",size=1.1)
   p <- p + scale_x_continuous(limits=xRange) + scale_y_continuous(limits=yRange)
-  grob <- grobTree(textGrob(paste0('Evalue for Full PS Model:', FEvalue[1]), x=0.05,  y=0.9, hjust=0,
-                            gp=gpar(col="black", fontsize=12, fontface="italic")))
-  p <- p  + annotation_custom(grob) # paste0('Evalue',": ", FEvalue[1]," ","(",FEvalue[2],",", FEvalue[3],")"),
+  #grob <- grobTree(textGrob(paste0('Evalue for Full PS Model:', FEvalue[1]), x=0.05,  y=0.9, hjust=0,
+                            #gp=gpar(col="black", fontsize=12, fontface="italic")))
+  #p <- p  + annotation_custom(grob) # paste0('Evalue',": ", FEvalue[1]," ","(",FEvalue[2],",", FEvalue[3],")"),
                       
-  p <- p + ggtitle("Oral Therapy, IPTW")
-  p <- p + xlab('ATE (Odds Ratio Scale)') + ylab('-log10(pvalue)') + theme_bw()
+ # p <- p + ggtitle("Oral Therapy, IPTW")
+  p <- p + labs(color="K",
+                y='PValue (-log10 scale)',
+                caption=paste0('Evalue for Full PS Model:', FEvalue[1])) + theme_bw() + theme(legend.position = "none")
   return(p)
 }
 
